@@ -1,0 +1,8 @@
+services:
+  java:
+    build:
+      context: .
+    container_name: dsa-mastery
+    volumes:
+      - ./:/usr/src/app
+    command: sleep infinity
