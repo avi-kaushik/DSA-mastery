@@ -46,6 +46,6 @@ class InsertElement {
         int arr[] = {4, 48, 4, 19, 24, 78};
 
         insertElement(arr, 3, 98);
-        System.err.println(Arrays.toString(arr));
+        System.out.println(Arrays.toString(arr));
     }
 }
