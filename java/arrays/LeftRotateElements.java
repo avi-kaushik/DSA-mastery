@@ -16,6 +16,10 @@ class LeftRotateElements {
      * @throws IllegalArgumentException if {@code arr} is {@code null} or empty
      */
     public static int[] leftRotateByOne(int arr[]) {
+        if (arr == null || arr.length == 0) {
+            throw new IllegalArgumentException("Array must not be null or empty");
+        }
+
         // Save the value of the first element.
         int firstElement = arr[0];
 
