@@ -45,7 +45,7 @@ class LeftRotateElements {
      * position, and the first element moves to the end of the array. This
      * process is repeated {@code n} times. For example:
      *
-     * arr = {12, 4, 2, 41, 87}, n = 2 result = {2, 41, 87, 12, 4}
+     * arr = {12, 4, 2, 41, 87}, d = 2 result = {2, 41, 87, 12, 4}
      *
      * This implementation uses an auxiliary array of size {@code n} to store
      * the first {@code n} elements, shifts the remaining elements to the left,
@@ -53,51 +53,51 @@ class LeftRotateElements {
      *
      * Time Complexity: O(n) — each element is moved at most once.
      *
-     * Space Complexity: O(n) — extra space used for storing {@code n} elements.
+     * Auxilary Space: O(d) — extra space used for storing {@code n} elements.
      *
      * @param arr the array to be rotated; must not be {@code null}
-     * @param n the number of positions to rotate; if greater than array length,
+     * @param d the number of positions to rotate; if greater than array length,
      * it is reduced modulo the array length
      * @return the rotated array (modifies the original array in place)
      * @throws IllegalArgumentException if {@code arr} is null or empty, or if
-     * {@code n} is negative
+     * {@code d} is negative
      */
     @SuppressWarnings("ManualArrayToCollectionCopy")
-    public static int[] leftRotateAlgo1(int arr[], int n) {
+    public static int[] leftRotateAlgo1(int arr[], int d) {
         if (arr == null || arr.length == 0) {
             throw new IllegalArgumentException("Array must not be null or empty");
         }
-        if (n < 0) {
+        if (d < 0) {
             throw new IllegalArgumentException("Rotation count cannot be negative");
         }
 
-        n = n % arr.length; // Prevent out-of-bounds
-        if (n == 0) {
+        d = d % arr.length; // Prevent out-of-bounds
+        if (d == 0) {
             return arr; // No rotation needed
         }
 
         /* Algorithm 1:
-        Step 1: Save first n values in an new array.
+        Step 1: Save first d values in an new array.
         Step 2: Swap existing values in the array.
-        Step 3: Replace the last n items with the previously saved first n items.
+        Step 3: Replace the last n items with the previously saved first d items.
          */
-        int newArr[] = new int[n];
+        int newArr[] = new int[d];
 
-        // Copying first n elements into a new array.
+        // Copying first d elements into a new array.
         int i;
         for (i = 0; i < newArr.length; i++) {
             newArr[i] = arr[i];
         }
 
-        // Left rotating the values from index n to last. 
-        // This way, the items from first index to *array.length - n* items will get left rotated.
+        // Left rotating the values from index d to last. 
+        // This way, the items from first index to *array.length - d* items will get left rotated.
         for (int j = i; j < arr.length; j++) {
-            arr[j - n] = arr[j];
+            arr[j - d] = arr[j];
         }
 
-        // Copying the first n saved element to the last 3 elements in the original array.
+        // Copying the first d saved element to the last 3 elements in the original array.
         for (int k = 0; k < newArr.length; k++) {
-            arr[arr.length - n + k] = newArr[k];
+            arr[arr.length - d + k] = newArr[k];
         }
 
         return arr;
