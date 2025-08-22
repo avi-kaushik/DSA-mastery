@@ -14,7 +14,7 @@ class StockBuySell {
      * next day ("Next buy").
      *
      * 
-     * <b>Note:</b>
+     * Note:
      * This function ensures it will not recommend a transaction that leads to a
      * direct loss, as it sells before a drop or on the last day. However, it
      * does not always identify the optimal buy-sell points (local minima and
@@ -25,13 +25,13 @@ class StockBuySell {
      * Example: For prices = {45, 12, 45, 12, 45, 112, 98, 101} Output may
      * include: Opt out at: 45 Next buy at: 12 ...
      *
-     * <b>Time Complexity:</b> O(n) - The function iterates through the array
+     * Time Complexity: O(n) - The function iterates through the array
      * once, performing O(1) operations per iteration.
      *
-     * <b>Space Complexity:</b> O(1) - No additional data structures are used
+     * Space Complexity: O(1) - No additional data structures are used
      * that scale with input size.
      *
-     * <b>Auxiliary Space:</b> O(1) - Only a few variables are used for
+     * Auxiliary Space: O(1) - Only a few variables are used for
      * iteration and temporary checks.
      *
      * @param prices an array of integers representing stock prices for each day
