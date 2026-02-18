@@ -1,4 +1,4 @@
-FROM openjdk:21-slim
+FROM eclipse-temurin:21-jdk-jammy
 
 # Set noninteractive frontend for clean install
 ENV DEBIAN_FRONTEND=noninteractive
