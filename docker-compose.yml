@@ -3,6 +3,7 @@ services:
     build:
       context: .
     container_name: dsa-mastery
+    working_dir: /code
     volumes:
-      - ./:/usr/src/app
+      - ./:/code
     command: sleep infinity
