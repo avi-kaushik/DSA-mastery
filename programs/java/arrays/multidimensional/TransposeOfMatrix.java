@@ -40,12 +40,11 @@ public class TransposeOfMatrix {
     /*
      * Function to transpose the matrix in-place and print it
      */
-    static void printTransposeOfAMatrix(int arr[][]) {
+    static int[][] convertToTranspose(int arr[][]) throws Exception {
 
         // check if matrix is square
         if (arr.length != arr[0].length) {
-            System.out.println("Transpose in-place only works for square matrices");
-            return;
+            throw new Exception("Transpose in-place only works for square matrices");
         }
 
         int n = arr.length;
@@ -61,11 +60,10 @@ public class TransposeOfMatrix {
             }
         }
 
-        // print result
-        Print2DArray.printArray(arr);
+        return arr;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         // sample input
         int arr[][] = {
@@ -75,6 +73,9 @@ public class TransposeOfMatrix {
                 { 13, 14, 15, 16 }
         };
 
-        printTransposeOfAMatrix(arr);
+        convertToTranspose(arr);
+
+        // print result
+        Print2DArray.printArray(arr);
     }
 }
