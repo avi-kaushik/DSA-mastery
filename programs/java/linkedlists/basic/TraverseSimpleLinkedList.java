@@ -1,4 +1,4 @@
-package programs.java.linkedlists;
+package programs.java.linkedlists.basic;
 
 import programs.java.linkedlists.common.IntNode;
 
