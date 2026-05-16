@@ -2,7 +2,7 @@ package programs.java.linkedlists.basic;
 
 import programs.java.linkedlists.common.IntNode;
 
-public class InsertInSinglyLinkedList {
+public class ManageNodesInSinglyLinkedList {
 
     /*
      * Insert a new node at the beginning of the linked list
@@ -96,7 +96,53 @@ public class InsertInSinglyLinkedList {
         return head;
     }
 
+    /*
+     * Delete the head node from the linked list
+     *
+     * Time Complexity:
+     * O(1)
+     */
+    public static IntNode deleteHead(IntNode head) {
+
+        // Return null if linked list is empty
+        if (head == null)
+            return head;
+
+        // Return next node as new head
+        return head.next;
+    }
+
+    /*
+     * Delete the last node from the linked list
+     *
+     * Time Complexity:
+     * O(n)
+     */
+    public static IntNode deleteTail(IntNode head) {
+
+        // Return null if linked list is empty
+        if (head == null)
+            return null;
+
+        // Return null if linked list contains only one node
+        if (head.next == null)
+            return null;
+
+        IntNode current = head;
+
+        // Traverse till second last node
+        while (current.next.next != null) {
+            current = current.next;
+        }
+
+        // Remove last node reference
+        current.next = null;
+
+        return head;
+    }
+
     public static void main(String[] args) {
+        System.out.println("Initializing linked list...");
 
         // Initialize empty linked list
         IntNode head = null;
@@ -107,10 +153,26 @@ public class InsertInSinglyLinkedList {
         head = insertAtEnd(15, head);
         head = insertAtEnd(25, head);
 
+        TraverseSimpleLinkedList.print(head);
+
+        System.out.println("\nInserting 21 at position 3...");
         // Insert node at specific position
         head = insertAtPosition(head, 21, 3);
 
+        TraverseSimpleLinkedList.print(head);
+
+        System.out.println("\nDeleting first node...");
+        head = deleteHead(head);
+
         // Print linked list
+        TraverseSimpleLinkedList.print(head);
+
+        System.out.println("\nDeleting last node...");
+        head = deleteTail(head);
+
+        TraverseSimpleLinkedList.print(head);
+
+        System.out.println("\nFinal Linked List:");
         TraverseSimpleLinkedList.print(head);
     }
 }
