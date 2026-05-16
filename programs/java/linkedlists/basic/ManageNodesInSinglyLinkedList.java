@@ -141,6 +141,77 @@ public class ManageNodesInSinglyLinkedList {
         return head;
     }
 
+    /*
+     * Search data in linked list using iterative approach
+     *
+     * Returns:
+     * Position of node if data is found -1 if data is not found
+     *
+     * Position indexing starts from 1
+     *
+     * Time Complexity:
+     * O(n)
+     */
+    public static int searchDataIterative(IntNode head, int data) {
+
+        IntNode current = head;
+
+        // Track current node position
+        int position = 1;
+
+        // Traverse linked list node by node
+        while (current != null) {
+
+            // Return position if data is found
+            if (current.data == data)
+                return position;
+
+            // Move to next position
+            position++;
+
+            // Move to next node
+            current = current.next;
+        }
+
+        // Return -1 if data is not present
+        return -1;
+    }
+
+    /*
+     * Search data in linked list using recursive approach
+     *
+     * Returns:
+     * Position of node if data is found -1 if data is not found
+     *
+     * Position indexing starts from 1
+     *
+     * Time Complexity:
+     * O(n)
+     *
+     * Auxiliary Space:
+     * O(n) due to recursion stack
+     */
+    public static int searchDataRecursive(IntNode head, int data) {
+
+        // Return -1 if data is not found
+        if (head == null)
+            return -1;
+
+        // Return 1 if current node contains target data
+        if (head.data == data)
+            return 1;
+
+        // Search data in remaining linked list
+        int res = searchDataRecursive(head.next, data);
+
+        // Return -1 if data is not found in remaining nodes
+        if (res == -1)
+            return -1;
+
+        // Add current node position while recursion backtracks
+        return res + 1;
+    }
+
     public static void main(String[] args) {
         System.out.println("Initializing linked list...");
 
@@ -153,26 +224,46 @@ public class ManageNodesInSinglyLinkedList {
         head = insertAtEnd(15, head);
         head = insertAtEnd(25, head);
 
+        // Print linked list
         TraverseSimpleLinkedList.print(head);
 
         System.out.println("\nInserting 21 at position 3...");
+
         // Insert node at specific position
         head = insertAtPosition(head, 21, 3);
 
+        // Print linked list
         TraverseSimpleLinkedList.print(head);
 
         System.out.println("\nDeleting first node...");
+
+        // Delete first node
         head = deleteHead(head);
 
         // Print linked list
         TraverseSimpleLinkedList.print(head);
 
         System.out.println("\nDeleting last node...");
+
+        // Delete last node
         head = deleteTail(head);
 
+        // Print linked list
         TraverseSimpleLinkedList.print(head);
 
         System.out.println("\nFinal Linked List:");
+
+        // Print final linked list
         TraverseSimpleLinkedList.print(head);
+
+        System.out.println("\nSearching 15 using iterative approach...");
+
+        // Search node using iterative approach
+        System.out.println(searchDataIterative(head, 15));
+
+        System.out.println("\nSearching 21 using recursive approach...");
+
+        // Search node using recursive approach
+        System.out.println(searchDataRecursive(head, 21));
     }
 }
