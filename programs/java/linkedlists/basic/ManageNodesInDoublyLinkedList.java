@@ -87,10 +87,10 @@ public class ManageNodesInDoublyLinkedList {
      *
      * Steps:
      * 1. Traverse linked list
-     * 2. Swap current node's prev and next references
-     * 3. Store latest processed node
+     * 2. Store current prev reference temporarily
+     * 3. Swap current node's prev and next references
      * 4. Move to next node using swapped prev reference
-     * 5. Return latest processed node as new head
+     * 5. Return new head using temp.prev
      *
      * Time Complexity:
      * O(n)
@@ -103,35 +103,32 @@ public class ManageNodesInDoublyLinkedList {
      */
     public static DoublyNode<Integer> reverse(DoublyNode<Integer> head) {
 
-        // If linked list is empty, return same head
-        if (head == null)
+        // If linked list is empty or has only one node, return same head
+        if (head == null || head.next == null)
             return head;
 
         // Start traversal from head
         DoublyNode<Integer> current = head;
 
-        // Stores latest processed node
-        DoublyNode<Integer> latestHead = null;
+        // Temporary reference used during swapping
+        DoublyNode<Integer> temp = null;
 
         // Traverse linked list
         while (current != null) {
 
             // Store current prev reference temporarily
-            DoublyNode<Integer> temp = current.prev;
+            temp = current.prev;
 
             // Swap prev and next references
             current.prev = current.next;
             current.next = temp;
-
-            // Update latest processed node
-            latestHead = current;
 
             // Move to next node using swapped prev reference
             current = current.prev;
         }
 
         // Return new head
-        return latestHead;
+        return temp.prev;
     }
 
     public static void main(String[] args) {
