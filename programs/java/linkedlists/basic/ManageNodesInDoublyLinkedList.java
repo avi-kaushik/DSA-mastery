@@ -82,6 +82,58 @@ public class ManageNodesInDoublyLinkedList {
         return head;
     }
 
+    /**
+     * Reverse doubly linked list
+     *
+     * Steps:
+     * 1. Traverse linked list
+     * 2. Swap current node's prev and next references
+     * 3. Store latest processed node
+     * 4. Move to next node using swapped prev reference
+     * 5. Return latest processed node as new head
+     *
+     * Time Complexity:
+     * O(n)
+     *
+     * Space Complexity:
+     * O(1)
+     *
+     * @param head current head of linked list
+     * @return new head of reversed linked list
+     */
+    public static DoublyNode<Integer> reverse(DoublyNode<Integer> head) {
+
+        // If linked list is empty, return same head
+        if (head == null)
+            return head;
+
+        // Start traversal from head
+        DoublyNode<Integer> current = head;
+
+        // Stores latest processed node
+        DoublyNode<Integer> latestHead = null;
+
+        // Traverse linked list
+        while (current != null) {
+
+            // Store current prev reference temporarily
+            DoublyNode<Integer> temp = current.prev;
+
+            // Swap prev and next references
+            current.prev = current.next;
+            current.next = temp;
+
+            // Update latest processed node
+            latestHead = current;
+
+            // Move to next node using swapped prev reference
+            current = current.prev;
+        }
+
+        // Return new head
+        return latestHead;
+    }
+
     public static void main(String[] args) {
         // Create nodes
         DoublyNode<Integer> node1 = new DoublyNode<>(21);
@@ -99,6 +151,8 @@ public class ManageNodesInDoublyLinkedList {
 
         DoublyNode<Integer> head = insertAtBeginning(47, node1);
         head = insertAtEnd(64, head);
+
+        head = reverse(head);
 
         TraverseDoublyLinkedList.print(head);
     }
