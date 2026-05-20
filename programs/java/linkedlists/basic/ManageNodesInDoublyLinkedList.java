@@ -83,6 +83,93 @@ public class ManageNodesInDoublyLinkedList {
     }
 
     /**
+     * Delete head node from doubly linked list
+     *
+     * Steps:
+     * 1. If linked list is empty, return null
+     * 2. If linked list has only one node, return null
+     * 3. Move head to next node
+     * 4. Remove backward connection of new head
+     * 5. Return updated head
+     *
+     * Time Complexity:
+     * O(1)
+     *
+     * @param head current head of linked list
+     * @return updated head after deletion
+     */
+    public static DoublyNode<Integer> deleteHead(DoublyNode<Integer> head) {
+
+        // If linked list is empty
+        if (head == null) {
+            return null;
+        }
+
+        // If linked list has only one node
+        if (head.next == null) {
+            return null;
+        }
+
+        // Move head to next node
+        head = head.next;
+
+        // Remove backward connection
+        head.prev = null;
+
+        // Return updated head
+        return head;
+    }
+
+    /**
+     * Delete last node from doubly linked list
+     *
+     * Steps:
+     * 1. If linked list is empty, return null
+     * 2. If linked list has only one node, return null
+     * 3. Traverse to second last node
+     * 4. Store last node reference
+     * 5. Remove forward connection from second last node
+     * 6. Remove backward connection from last node
+     * 7. Return original head
+     *
+     * Time Complexity:
+     * O(n)
+     *
+     * Space Complexity:
+     * O(1)
+     *
+     * @param head current head of linked list
+     * @return head after deleting last node
+     */
+    public static DoublyNode<Integer> deleteLastNode(
+            DoublyNode<Integer> head) {
+
+        // If linked list is empty or has only one node
+        if (head == null || head.next == null)
+            return null;
+
+        // Start traversal from head
+        DoublyNode<Integer> current = head;
+
+        // Traverse until second last node
+        while (current.next.next != null) {
+            current = current.next;
+        }
+
+        // Store last node reference
+        DoublyNode<Integer> last = current.next;
+
+        // Remove forward connection
+        current.next = null;
+
+        // Remove backward connection
+        last.prev = null;
+
+        // Return original head
+        return head;
+    }
+
+    /**
      * Reverse doubly linked list
      *
      * Steps:
@@ -132,10 +219,19 @@ public class ManageNodesInDoublyLinkedList {
     }
 
     public static void main(String[] args) {
+
+        System.out.println("=== Create Nodes ===");
+
         // Create nodes
         DoublyNode<Integer> node1 = new DoublyNode<>(21);
         DoublyNode<Integer> node2 = new DoublyNode<>(15);
         DoublyNode<Integer> node3 = new DoublyNode<>(47);
+
+        System.out.println("node1 = " + node1.data);
+        System.out.println("node2 = " + node2.data);
+        System.out.println("node3 = " + node3.data);
+
+        System.out.println("\n=== Connect Nodes ===");
 
         // Connect node1 and node2
         node1.next = node2;
@@ -146,11 +242,57 @@ public class ManageNodesInDoublyLinkedList {
         // Connect node2 and node3
         node3.prev = node2;
 
+        System.out.println("Connected:");
+        System.out.println(node1.data + " <-> " + node2.data);
+        System.out.println(node2.data + " <-> " + node3.data);
+
+        System.out.println("\nCurrent List:");
+        TraverseDoublyLinkedList.print(node1);
+
+        System.out.println("\n=== Insert At Beginning ===");
+
         DoublyNode<Integer> head = insertAtBeginning(47, node1);
+
+        System.out.println("Inserted 47");
+
+        System.out.println("Current List:");
+        TraverseDoublyLinkedList.print(head);
+
+        System.out.println("\n=== Insert At End ===");
+
         head = insertAtEnd(64, head);
+
+        System.out.println("Inserted 64");
+
+        System.out.println("Current List:");
+        TraverseDoublyLinkedList.print(head);
+
+        System.out.println("\n=== Reverse List ===");
 
         head = reverse(head);
 
+        System.out.println("Reversed List:");
+
         TraverseDoublyLinkedList.print(head);
+
+        System.out.println("\n=== Delete Head ===");
+
+        head = deleteHead(head);
+
+        System.out.println("Deleted Head");
+
+        System.out.println("Current List:");
+        TraverseDoublyLinkedList.print(head);
+
+        System.out.println("\n=== Delete Last Node ===");
+
+        head = deleteLastNode(head);
+
+        System.out.println("Deleted Last Node");
+
+        System.out.println("Final List:");
+        TraverseDoublyLinkedList.print(head);
+
+        System.out.println("\n=== Completed ===");
     }
 }
