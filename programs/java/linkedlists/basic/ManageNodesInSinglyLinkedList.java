@@ -1,6 +1,6 @@
 package programs.java.linkedlists.basic;
 
-import programs.java.linkedlists.common.IntNode;
+import programs.java.linkedlists.common.Node;
 
 public class ManageNodesInSinglyLinkedList {
 
@@ -10,8 +10,9 @@ public class ManageNodesInSinglyLinkedList {
      * Time Complexity:
      * O(1)
      */
-    public static IntNode insertAtBeginning(int n, IntNode head) {
-        IntNode newHead = new IntNode(n);
+    public static Node<Integer> insertAtBeginning(int n, Node<Integer> head) {
+
+        Node<Integer> newHead = new Node<>(n);
 
         // Point new node to current head
         newHead.next = head;
@@ -26,15 +27,16 @@ public class ManageNodesInSinglyLinkedList {
      * Time Complexity:
      * O(n)
      */
-    public static IntNode insertAtEnd(int n, IntNode head) {
-        IntNode node = new IntNode(n);
+    public static Node<Integer> insertAtEnd(int n, Node<Integer> head) {
+
+        Node<Integer> node = new Node<>(n);
 
         // If linked list is empty, new node becomes head
         if (head == null) {
             return node;
         }
 
-        IntNode current = head;
+        Node<Integer> current = head;
 
         // Traverse till the last node
         while (current.next != null) {
@@ -55,14 +57,14 @@ public class ManageNodesInSinglyLinkedList {
      * Time Complexity:
      * O(n)
      */
-    public static IntNode insertAtPosition(IntNode head, int num, int position) {
+    public static Node<Integer> insertAtPosition(Node<Integer> head, int num, int position) {
 
         // Return existing list for invalid positions
         if (position <= 0) {
             return head;
         }
 
-        IntNode newNode = new IntNode(num);
+        Node<Integer> newNode = new Node<>(num);
 
         // Insert node at beginning
         if (position == 1) {
@@ -75,7 +77,7 @@ public class ManageNodesInSinglyLinkedList {
             return head;
         }
 
-        IntNode current = head;
+        Node<Integer> current = head;
 
         // Traverse till node before target position
         for (int i = 1; i < position - 1 && current != null; i++) {
@@ -102,7 +104,7 @@ public class ManageNodesInSinglyLinkedList {
      * Time Complexity:
      * O(1)
      */
-    public static IntNode deleteHead(IntNode head) {
+    public static Node<Integer> deleteHead(Node<Integer> head) {
 
         // Return null if linked list is empty
         if (head == null)
@@ -118,7 +120,7 @@ public class ManageNodesInSinglyLinkedList {
      * Time Complexity:
      * O(n)
      */
-    public static IntNode deleteTail(IntNode head) {
+    public static Node<Integer> deleteTail(Node<Integer> head) {
 
         // Return null if linked list is empty
         if (head == null)
@@ -128,7 +130,7 @@ public class ManageNodesInSinglyLinkedList {
         if (head.next == null)
             return null;
 
-        IntNode current = head;
+        Node<Integer> current = head;
 
         // Traverse till second last node
         while (current.next.next != null) {
@@ -145,16 +147,17 @@ public class ManageNodesInSinglyLinkedList {
      * Search data in linked list using iterative approach
      *
      * Returns:
-     * Position of node if data is found -1 if data is not found
+     * Position of node if data is found
+     * -1 if data is not found
      *
      * Position indexing starts from 1
      *
      * Time Complexity:
      * O(n)
      */
-    public static int searchDataIterative(IntNode head, int data) {
+    public static int searchDataIterative(Node<Integer> head, int data) {
 
-        IntNode current = head;
+        Node<Integer> current = head;
 
         // Track current node position
         int position = 1;
@@ -181,7 +184,8 @@ public class ManageNodesInSinglyLinkedList {
      * Search data in linked list using recursive approach
      *
      * Returns:
-     * Position of node if data is found -1 if data is not found
+     * Position of node if data is found
+     * -1 if data is not found
      *
      * Position indexing starts from 1
      *
@@ -191,7 +195,7 @@ public class ManageNodesInSinglyLinkedList {
      * Auxiliary Space:
      * O(n) due to recursion stack
      */
-    public static int searchDataRecursive(IntNode head, int data) {
+    public static int searchDataRecursive(Node<Integer> head, int data) {
 
         // Return -1 if data is not found
         if (head == null)
@@ -213,10 +217,11 @@ public class ManageNodesInSinglyLinkedList {
     }
 
     public static void main(String[] args) {
+
         System.out.println("Initializing linked list...");
 
         // Initialize empty linked list
-        IntNode head = null;
+        Node<Integer> head = null;
 
         // Insert nodes at end
         head = insertAtEnd(10, head);

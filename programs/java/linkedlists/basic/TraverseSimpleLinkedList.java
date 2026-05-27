@@ -1,6 +1,6 @@
 package programs.java.linkedlists.basic;
 
-import programs.java.linkedlists.common.IntNode;
+import programs.java.linkedlists.common.Node;
 
 public class TraverseSimpleLinkedList {
 
@@ -13,10 +13,10 @@ public class TraverseSimpleLinkedList {
      * Output:
      * 20, 10, 30
      */
-    public static void print(IntNode node) {
+    public static void print(Node<Integer> node) {
 
         // Start traversal from head node
-        IntNode current = node;
+        Node<Integer> current = node;
 
         // Traverse until current node becomes null
         while (current != null) {
@@ -40,7 +40,7 @@ public class TraverseSimpleLinkedList {
      * Output:
      * 20, 10, 30
      */
-    public static void printRecursive(IntNode node) {
+    public static void printRecursive(Node<Integer> node) {
 
         // Base condition:
         // If node becomes null, stop recursion
@@ -59,9 +59,9 @@ public class TraverseSimpleLinkedList {
     public static void main(String[] args) {
 
         // Create nodes
-        IntNode node1 = new IntNode(20);
-        IntNode node2 = new IntNode(10);
-        IntNode node3 = new IntNode(30);
+        Node<Integer> node1 = new Node<>(20);
+        Node<Integer> node2 = new Node<>(10);
+        Node<Integer> node3 = new Node<>(30);
 
         /**
          * Connect nodes

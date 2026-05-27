@@ -1,6 +1,6 @@
 package programs.java.linkedlists.basic;
 
-import programs.java.linkedlists.common.IntNode;
+import programs.java.linkedlists.common.Node;
 
 public class MiddleOfALinkedList {
 
@@ -17,14 +17,14 @@ public class MiddleOfALinkedList {
      * Time Complexity : O(n)
      * Space Complexity : O(1)
      */
-    public static int middle(IntNode head) {
+    public static int middle(Node<Integer> head) {
 
         // Empty linked list
         if (head == null)
             return -1;
 
-        IntNode slow = head;
-        IntNode fast = head;
+        Node<Integer> slow = head;
+        Node<Integer> fast = head;
 
         while (fast != null && fast.next != null) {
 
@@ -41,7 +41,7 @@ public class MiddleOfALinkedList {
 
     public static void main(String[] args) {
 
-        IntNode head = ManageNodesInSinglyLinkedList.insertAtEnd(12, null);
+        Node<Integer> head = ManageNodesInSinglyLinkedList.insertAtEnd(12, null);
         head = ManageNodesInSinglyLinkedList.insertAtEnd(15, head);
         head = ManageNodesInSinglyLinkedList.insertAtEnd(8, head);
         head = ManageNodesInSinglyLinkedList.insertAtEnd(53, head);
