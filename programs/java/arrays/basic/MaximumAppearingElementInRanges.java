@@ -1,3 +1,5 @@
+package programs.java.arrays.basic;
+
 /**
  * Finds the maximum appearing element in given ranges.
  *

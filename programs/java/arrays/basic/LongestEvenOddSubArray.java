@@ -1,3 +1,5 @@
+package programs.java.arrays.basic;
+
 /**
  * Finds the length of the longest subarray where
  * elements alternate between even and odd.

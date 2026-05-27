@@ -1,3 +1,5 @@
+package programs.java.arrays.basic;
+
 /**
  * Demonstrates the Sliding Window Technique
  * to find the maximum sum of k consecutive elements in an array.

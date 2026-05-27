@@ -1,5 +1,6 @@
-// Class to search for the largest integer in an array
+package programs.java.arrays.basic;
 
+// Class to search for the largest integer in an array
 class LargestElement {
 
     /**

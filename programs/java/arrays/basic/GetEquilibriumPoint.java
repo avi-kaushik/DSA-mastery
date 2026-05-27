@@ -1,3 +1,5 @@
+package programs.java.arrays.basic;
+
 /**
  * Utility class to find an equilibrium element in an array.
  *

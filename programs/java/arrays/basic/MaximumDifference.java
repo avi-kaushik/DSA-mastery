@@ -1,3 +1,5 @@
+package programs.java.arrays.basic;
+
 // Class for find the maximun difference of the values in an array.
 
 class MaximumDifference {

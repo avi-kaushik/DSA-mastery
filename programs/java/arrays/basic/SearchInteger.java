@@ -1,3 +1,4 @@
+package programs.java.arrays.basic;
 
 // This class provides a method to search for a specific integer in an array.
 class SearchInteger {

@@ -1,3 +1,5 @@
+package programs.java.arrays.basic;
+
 /**
  * This class provides a utility method to find
  * the maximum number of consecutive 1s in a binary array.

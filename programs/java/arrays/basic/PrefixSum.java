@@ -1,3 +1,5 @@
+package programs.java.arrays.basic;
+
 import java.util.Arrays;
 
 /**

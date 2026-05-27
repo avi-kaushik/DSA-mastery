@@ -1,3 +1,5 @@
+package programs.java.arrays.basic;
+
 // Class to print the frequency of each unique element in a sorted integer array.
 
 class FrequencyInSortedArray {

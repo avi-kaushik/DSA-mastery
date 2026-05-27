@@ -1,3 +1,4 @@
+package programs.java.arrays.basic;
 
 class TrappingRainWater {
 
