@@ -134,6 +134,72 @@ public class ManageLoopInLinkedList {
         return false;
     }
 
+    /**
+     * Finds the starting node of a loop in a linked list using Floyd's Cycle
+     * Detection Algorithm.
+     *
+     * Logic:
+     * 1. Use slow and fast pointers to detect whether a loop exists.
+     * 2. If slow and fast meet, reset slow to head.
+     * 3. Move both pointers one step at a time.
+     * 4. The node where they meet again is the starting node of the loop.
+     *
+     * Time Complexity: O(n)
+     * Space Complexity: O(1)
+     */
+    public static Node<Integer> startOfTheLoop(Node<Integer> head) {
+        if (head == null)
+            return head;
+
+        Node<Integer> slow = head, fast = head;
+
+        // Use fast-slow pointers
+        while (fast != null && fast.next != null) {
+
+            // Move fast pointer by 1 node
+            slow = slow.next;
+
+            // Move fast pointer by 2 nodes
+            fast = fast.next.next;
+
+            // Cycle found if both pointer meet each other.
+            if (slow == fast) {
+
+                // Move slow to head
+                slow = head;
+
+                /*
+                 * At this point:
+                 *
+                 * slow -> Starts from head
+                 * fast -> Starts from meeting point
+                 *
+                 * Move both pointers one step at a time until:
+                 *
+                 * slow.next == fast.next
+                 *
+                 * Then:
+                 * slow -> Node before loop starting node
+                 * fast -> Last node in the loop
+                 * 
+                 * This loop will stop when slow and fast pointer will reach to the end of the
+                 * cycle.
+                 */
+                while (slow != fast) {
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+
+                // Both fast and slow will be the starting node.
+                return fast;
+
+            }
+        }
+
+        // Returns null, if not found anything.
+        return null;
+    }
+
     public static void main(String[] args) {
 
         // Create nodes
@@ -159,11 +225,12 @@ public class ManageLoopInLinkedList {
         Node<Integer> head = n1;
 
         System.out.println("Loop Exists: " + isLoop(head));
+        System.out.println("Start of the Loop: " + startOfTheLoop(head));
 
-        System.out.println("Deleting loop...");
-        deleteLoop(head);
+        // System.out.println("Deleting loop...");
+        // deleteLoop(head);
 
-        System.out.print("Linked list: ");
-        TraverseSimpleLinkedList.print(head);
+        // System.out.print("Linked list: ");
+        // TraverseSimpleLinkedList.print(head);
     }
 }
