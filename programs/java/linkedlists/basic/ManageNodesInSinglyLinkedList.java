@@ -143,6 +143,36 @@ public class ManageNodesInSinglyLinkedList {
         return head;
     }
 
+    /**
+     * Deletes a node from a singly linked list when only a reference to that node
+     * is provided.
+     *
+     * Since the previous node is not available, the node cannot be removed
+     * directly.
+     * Instead, copy the data from the next node into the current node and bypass
+     * the next node.
+     *
+     * Algorithm:
+     * 1. Check if the given node is null or the last node.
+     * 2. Copy the data of the next node into the current node.
+     * 3. Update the next pointer to skip the next node.
+     *
+     * Time Complexity: O(1)
+     * Auxiliary Space: O(1)
+     *
+     */
+    public static void deleteNode(Node<Integer> node) {
+        // Cannot delete if node is null or the last node
+        if (node == null || node.next == null)
+            return;
+
+        // Copy data from next node
+        node.data = node.next.data;
+
+        // Remove next node from the list
+        node.next = node.next.next;
+    }
+
     /*
      * Search data in linked list using iterative approach
      *
