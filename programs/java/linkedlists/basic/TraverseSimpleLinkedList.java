@@ -3,6 +3,38 @@ package programs.java.linkedlists.basic;
 import programs.java.linkedlists.common.Node;
 
 public class TraverseSimpleLinkedList {
+    /**
+     * Calculates the length of a linked list.
+     *
+     * Logic:
+     * 1. Start traversal from the head node.
+     * 2. Visit each node one by one.
+     * 3. Increment the length counter for every node visited.
+     * 4. Return the total count of nodes.
+     *
+     * Time Complexity: O(n)
+     * Space Complexity: O(1)
+     */
+    public static int length(Node<Integer> head) {
+
+        // Start traversal from the head node
+        Node<Integer> current = head;
+
+        int length = 0;
+
+        // Traverse the linked list until the end is reached
+        while (current != null) {
+
+            // Move to the next node
+            current = current.next;
+
+            // Increment length for every node visited
+            length++;
+        }
+
+        // Return total number of nodes in the linked list
+        return length;
+    }
 
     /**
      * Traverse and print the linked list using loop
