@@ -86,6 +86,9 @@ public class LargestRectangularAreaInHistogram {
      * @return Largest rectangular area in the histogram.
      */
     static int getLargestArea(int[] arr) {
+        if (arr == null || arr.length == 0)
+            return 0;
+
         int largest = 0;
 
         // Find prevous smaller indexes.
@@ -112,11 +115,96 @@ public class LargestRectangularAreaInHistogram {
         return largest;
     }
 
+    /**
+     * Finds the largest rectangular area that can be formed in a histogram.
+     *
+     * Approach:
+     * - Uses a monotonic increasing stack to store indices of histogram bars.
+     * - Whenever a smaller bar is encountered, bars greater than or equal to
+     * the current bar are popped and their maximum possible area is calculated.
+     * - For a popped bar:
+     * - The popped bar represents the rectangle height.
+     * - The current index acts as the Next Smaller Element (NSE).
+     * - The new top of the stack acts as the Previous Smaller Element (PSE).
+     * - Width is calculated using:
+     *
+     * width = NSE - PSE - 1
+     *
+     * - After traversing the histogram, any remaining bars in the stack do not
+     * have a smaller element on their right side. Their areas are calculated
+     * by considering the histogram boundary as the Next Smaller Element.
+     *
+     * Time Complexity: O(n)
+     * Space Complexity: O(n)
+     *
+     * @param arr Histogram where each element represents the height of a bar.
+     * @return Largest rectangular area that can be formed in the histogram.
+     */
+    public static int getLargestAreaV2(int[] arr) {
+
+        // Return 0 when the histogram is null or empty.
+        if (arr == null || arr.length == 0)
+            return 0;
+
+        // Stores indices of histogram bars in increasing order of height.
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+
+        // Stores the maximum rectangular area found so far.
+        int largest = 0;
+
+        for (int i = 0; i < arr.length; i++) {
+
+            /*
+             * Current bar acts as the Next Smaller Element (NSE) for all
+             * bars greater than or equal to it.
+             */
+            while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+
+                int top = stack.pop();
+
+                // Width between Previous Smaller Element (PSE)
+                // and Next Smaller Element (NSE).
+                int width = stack.isEmpty() ? i : i - stack.peek() - 1;
+
+                // Height represented by the popped bar.
+                int height = arr[top];
+
+                int unit = width * height;
+
+                largest = Math.max(largest, unit);
+            }
+
+            // Store current index for future area calculations.
+            stack.push(i);
+        }
+
+        /*
+         * Remaining bars do not have a smaller element on their right side.
+         * Histogram boundary acts as the Next Smaller Element (NSE).
+         */
+        while (!stack.isEmpty()) {
+
+            int top = stack.pop();
+
+            int width = stack.isEmpty()
+                    ? arr.length
+                    : arr.length - stack.peek() - 1;
+
+            int height = arr[top];
+
+            int unit = width * height;
+
+            largest = Math.max(largest, unit);
+        }
+
+        return largest;
+    }
+
     public static void main(String[] args) {
         int[] arr = { 6, 2, 5, 4, 1, 5, 6 };
 
         System.out.println("Arrays: " + Arrays.toString(arr));
 
-        System.out.println("Largest area of histogram: " + getLargestArea(arr));
+        System.out.println("Largest area of histogram: " + getLargestAreaV2(arr));
     }
 }
