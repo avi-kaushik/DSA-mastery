@@ -71,7 +71,9 @@ public class IntStack {
 
     /**
      * Returns the top element without removing it.
-     * 
+     *
+     * @return Top element of stack.
+     *
      * @throws RuntimeException when stack is empty.
      */
     public int peek() {
