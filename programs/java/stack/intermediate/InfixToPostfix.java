@@ -45,6 +45,54 @@ public class InfixToPostfix {
     }
 
     /**
+     * Evaluates the given arithmetic operation using the supplied operands.
+     *
+     * @param operand1 Left-hand operand.
+     * @param operand2 Right-hand operand.
+     * @param operator Arithmetic operator to be applied.
+     * @return Result of the evaluated expression.
+     * @throws RuntimeException If the operator is not supported.
+     */
+    private static int _parseExpression(int operand1, int operand2, char operator) {
+        switch (operator) {
+            case '/':
+                return operand1 / operand2;
+
+            case '*':
+                return operand1 * operand2;
+
+            case '+':
+                return operand1 + operand2;
+
+            case '-':
+                return operand1 - operand2;
+
+            case '^':
+                return (int) Math.pow(operand1, operand2);
+
+            default:
+                throw new RuntimeException("Invalid operator.");
+        }
+    }
+
+    /**
+     * Converts the currently accumulated operand into an integer and pushes it
+     * onto the operand stack.
+     *
+     * The operand buffer is cleared after it has been pushed so that the next
+     * operand can be accumulated independently.
+     *
+     * @param stack   Stack storing operands for postfix evaluation.
+     * @param operand Buffer containing the current operand being built.
+     */
+    private static void _pushOperand(ArrayDeque<Integer> stack, StringBuilder operand) {
+        if (operand.length() > 0) {
+            stack.push(Integer.parseInt(operand.toString()));
+            operand.setLength(0);
+        }
+    }
+
+    /**
      * Determines whether the operator at the top of the stack should be moved
      * to the postfix expression before pushing the current operator.
      *
@@ -137,10 +185,81 @@ public class InfixToPostfix {
         return builder.toString();
     }
 
+    /**
+     * Evaluates a postfix expression containing space-separated integer operands.
+     *
+     * Working:
+     * 1. Traverse the expression from left to right.
+     * 2. Accumulate digits to form complete operands.
+     * 3. Push completed operands onto the stack whenever a whitespace or
+     * operator is encountered.
+     * 4. For every operator, pop the top two operands, evaluate the expression,
+     * and push the result back onto the stack.
+     * 5. After traversal, push any remaining operand onto the stack.
+     * 6. The final value remaining in the stack is the evaluated result.
+     *
+     * Time Complexity: O(n)
+     * Space Complexity: O(n)
+     *
+     * @param pattern Postfix expression to be evaluated.
+     * @return Evaluated result of the postfix expression.
+     * @throws IllegalArgumentException If the postfix expression is invalid.
+     */
+    public static int evaluate(String pattern) {
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+
+        // Stores the digits of the current operand being built.
+        StringBuilder operand = new StringBuilder();
+
+        for (char character : pattern.toCharArray()) {
+
+            // Whitespace indicates the end of the current operand.
+            if (Character.isWhitespace(character)) {
+                _pushOperand(stack, operand);
+                continue;
+            }
+
+            if (_isOperator(character)) {
+
+                // Push the operand accumulated before the operator.
+                _pushOperand(stack, operand);
+
+                // Every operator requires two operands.
+                if (stack.size() < 2)
+                    throw new IllegalArgumentException("Invalid postfix expression.");
+
+                int operand2 = stack.pop();
+                int operand1 = stack.pop();
+
+                // Evaluate the expression and push the result back onto the stack.
+                stack.push(_parseExpression(operand1, operand2, character));
+            }
+
+            // Continue building the current operand.
+            else {
+                operand.append(character);
+            }
+        }
+
+        // Push the final operand if the expression does not end with whitespace.
+        _pushOperand(stack, operand);
+
+        // A valid postfix expression must leave exactly one value in the stack.
+        if (stack.size() != 1)
+            throw new IllegalArgumentException("Invalid postfix expression.");
+
+        return stack.pop();
+    }
+
     public static void main(String[] args) {
         String pattern = "a * (b + c)";
 
         System.out.println("Infix expression: " + pattern);
         System.out.println("Postfix: " + convert(pattern));
+
+        String evalPattern = "10 20 3 + *";
+
+        System.out.println("Postfix expression: " + evalPattern);
+        System.out.println("Postfix value: " + evaluate(evalPattern));
     }
 }
