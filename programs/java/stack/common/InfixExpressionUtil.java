@@ -18,6 +18,33 @@ public class InfixExpressionUtil {
     }
 
     /**
+     * Returns the precedence value of the given operator.
+     * A higher precedence value indicates that the operator should be evaluated
+     * first.
+     *
+     * @param operator Operator whose precedence needs to be determined.
+     * @return Precedence value of the operator, or {@code -1} for unsupported
+     *         characters.
+     */
+    public static int precedence(char operator) {
+        switch (operator) {
+            case '+':
+            case '-':
+                return 1;
+
+            case '*':
+            case '/':
+                return 2;
+
+            case '^':
+                return 3;
+
+            default:
+                return -1;
+        }
+    }
+
+    /**
      * Converts the currently accumulated operand into an integer and pushes it
      * onto the operand stack.
      *

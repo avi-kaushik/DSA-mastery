@@ -7,33 +7,6 @@ import programs.java.stack.common.InfixExpressionUtil;
 public class InfixToPostfix {
 
     /**
-     * Returns the precedence value of the given operator.
-     * A higher precedence value indicates that the operator should be evaluated
-     * first.
-     *
-     * @param operator Operator whose precedence needs to be determined.
-     * @return Precedence value of the operator, or {@code -1} for unsupported
-     *         characters.
-     */
-    private static int _precedence(char operator) {
-        switch (operator) {
-            case '+':
-            case '-':
-                return 1;
-
-            case '*':
-            case '/':
-                return 2;
-
-            case '^':
-                return 3;
-
-            default:
-                return -1;
-        }
-    }
-
-    /**
      * Determines whether the operator at the top of the stack should be moved
      * to the postfix expression before pushing the current operator.
      *
@@ -60,12 +33,12 @@ public class InfixToPostfix {
             boolean reverseAssociativity) {
 
         if (reverseAssociativity)
-            return _precedence(stackOperator) > _precedence(currentOperator);
+            return InfixExpressionUtil.precedence(stackOperator) > InfixExpressionUtil.precedence(currentOperator);
 
         if (stackOperator == '^' && currentOperator == '^')
             return false;
 
-        return _precedence(stackOperator) >= _precedence(currentOperator);
+        return InfixExpressionUtil.precedence(stackOperator) >= InfixExpressionUtil.precedence(currentOperator);
     }
 
     /**
