@@ -96,16 +96,31 @@ public class InfixToPostfix {
      * Determines whether the operator at the top of the stack should be moved
      * to the postfix expression before pushing the current operator.
      *
-     * Operators having higher or equal precedence are popped first.
-     * The exponent operator is right-associative and therefore is not popped
-     * when another exponent operator is encountered.
+     * During a normal infix to postfix conversion, operators having higher or
+     * equal precedence are popped first. The exponent operator is
+     * right-associative and therefore is not popped when another exponent
+     * operator is encountered.
      *
-     * @param stackOperator   Operator currently present at the top of the stack.
-     * @param currentOperator Operator currently being processed.
+     * During infix to prefix conversion, the infix expression is first reversed.
+     * Reversing the expression also reverses operator associativity. In this
+     * case, only operators having strictly higher precedence are popped.
+     *
+     * @param stackOperator        Operator currently present at the top of the
+     *                             stack.
+     * @param currentOperator      Operator currently being processed.
+     * @param reverseAssociativity {@code true} when processing a reversed infix
+     *                             expression for prefix conversion, otherwise
+     *                             {@code false}.
      * @return {@code true} if the stack operator should be popped, otherwise
      *         {@code false}.
      */
-    private static boolean _shouldPop(char stackOperator, char currentOperator) {
+    private static boolean _shouldPop(char stackOperator,
+            char currentOperator,
+            boolean reverseAssociativity) {
+
+        if (reverseAssociativity)
+            return _precedence(stackOperator) > _precedence(currentOperator);
+
         if (stackOperator == '^' && currentOperator == '^')
             return false;
 
@@ -121,7 +136,7 @@ public class InfixToPostfix {
      * 3. Push opening parentheses onto the stack.
      * 4. When a closing parenthesis is encountered, pop operators until the
      * matching opening parenthesis is found.
-     * 5. For operators, pop all operators having higher or equal precedence
+     * 5. For operators, pop operators according to precedence and associativity
      * before pushing the current operator onto the stack.
      * 6. After traversal, move all remaining operators from the stack to the
      * postfix expression.
@@ -133,6 +148,23 @@ public class InfixToPostfix {
      * @return Equivalent postfix expression.
      */
     public static String convert(String pattern) {
+        return convert(pattern, false);
+    }
+
+    /**
+     * Converts an infix expression into its equivalent postfix expression.
+     *
+     * This overload allows the associativity rules to be adjusted when the
+     * expression being processed is a reversed infix expression during
+     * infix to prefix conversion.
+     *
+     * @param pattern              Infix expression to be converted.
+     * @param reverseAssociativity {@code true} if the expression is a reversed
+     *                             infix expression used for prefix conversion,
+     *                             otherwise {@code false}.
+     * @return Equivalent postfix expression.
+     */
+    public static String convert(String pattern, boolean reverseAssociativity) {
         ArrayDeque<Character> stack = new ArrayDeque<>();
 
         StringBuilder builder = new StringBuilder();
@@ -159,19 +191,19 @@ public class InfixToPostfix {
                     stack.pop();
             }
 
-            // Move higher or equal precedence operators before pushing the current
-            // operator.
+            // Move operators according to precedence and associativity before
+            // pushing the current operator.
             else if (_isOperator(character)) {
                 while (!stack.isEmpty()
                         && stack.peek() != '('
-                        && _shouldPop(stack.peek(), character)) {
+                        && _shouldPop(stack.peek(), character, reverseAssociativity)) {
                     builder.append(stack.pop());
                 }
 
                 stack.push(character);
             }
 
-            // Operands are directly added to the postfix expression.
+            // Operand characters are directly appended to the postfix expression.
             else {
                 builder.append(character);
             }
