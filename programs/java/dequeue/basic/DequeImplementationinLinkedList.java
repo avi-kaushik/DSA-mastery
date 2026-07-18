@@ -2,7 +2,7 @@ package programs.java.dequeue.basic;
 
 import programs.java.dequeue.common.DequeueList;
 
-public class DequeImplementation {
+public class DequeImplementationinLinkedList {
     public static void main(String[] args) {
         DequeueList<Integer> deque = new DequeueList<>();
 
