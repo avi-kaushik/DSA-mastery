@@ -71,6 +71,35 @@ public class RecursionPractice {
     }
 
     /**
+     * Returns the sum of the digits of a given number using recursion.
+     *
+     * @param digit The number whose digits are to be summed.
+     * @return The sum of the digits.
+     * @throws IllegalArgumentException If digit is negative.
+     */
+    public static int getSumOfDigits(int digit) {
+        // Validate the input.
+        // The sum of digits is not defined for negative values.
+        if (digit < 0)
+            throw new IllegalArgumentException("digit cannot be negative.");
+
+        // Base case:
+        // Once no digits remain, return 0.
+        if (digit == 0)
+            return 0;
+
+        // Extract the last digit.
+        int lastDigit = digit % 10;
+
+        // Remove the last digit.
+        int remainingDigits = digit / 10;
+
+        // Recursively add the last digit
+        // to the sum of the remaining digits.
+        return lastDigit + getSumOfDigits(remainingDigits);
+    }
+
+    /**
      * Prints numbers from 1 to n using recursion.
      *
      * @param n The upper limit of the sequence.
@@ -118,5 +147,6 @@ public class RecursionPractice {
         System.out.println("Factorial of 5: " + getFactorial(5));
         System.out.println("7th Fibonacci: " + getFibonacci(7));
         System.out.println("Sum of first 5 numbers: " + getSum(5));
+        System.out.println("Sum of digits 1549: " + getSumOfDigits(1549));
     }
 }
