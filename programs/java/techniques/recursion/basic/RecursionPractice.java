@@ -48,6 +48,29 @@ public class RecursionPractice {
     }
 
     /**
+     * Returns the sum of the first n natural numbers using recursion.
+     *
+     * @param n The upper limit of the sequence.
+     * @return The sum of the first n natural numbers.
+     * @throws IllegalArgumentException If n is negative.
+     */
+    public static int getSum(int n) {
+        // Validate the input.
+        // The sum of natural numbers is not defined for negative values.
+        if (n < 0)
+            throw new IllegalArgumentException("n cannot be negative.");
+
+        // Base case:
+        // The sum of the first 0 natural numbers is 0.
+        if (n == 0)
+            return 0;
+
+        // Recursively add the current number
+        // to the sum of the previous numbers.
+        return n + getSum(n - 1);
+    }
+
+    /**
      * Prints numbers from 1 to n using recursion.
      *
      * @param n The upper limit of the sequence.
@@ -94,5 +117,6 @@ public class RecursionPractice {
 
         System.out.println("Factorial of 5: " + getFactorial(5));
         System.out.println("7th Fibonacci: " + getFibonacci(7));
+        System.out.println("Sum of first 5 numbers: " + getSum(5));
     }
 }
