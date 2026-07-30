@@ -1,4 +1,4 @@
-package programs.java.techniques.recursion.basic;
+package programs.java.techniques.recursion.intermediate;
 
 public class RopeCuttingProblem {
 
