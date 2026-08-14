@@ -32,6 +32,34 @@ public class DistinctElementsAndFrequencies {
     }
 
     /**
+     * Returns the total number of distinct elements present in both arrays.
+     *
+     * Uses a HashSet to store elements from both arrays. Since HashSet
+     * does not allow duplicate elements, its size represents the total
+     * number of distinct elements in the union of both arrays.
+     *
+     * Time Complexity: O(n + m) average
+     * Space Complexity: O(n + m)
+     *
+     * @param arr1 first array
+     * @param arr2 second array
+     * @return total number of distinct elements in both arrays
+     */
+    public static int getUnionTotalDistinctElements(int[] arr1, int[] arr2) {
+        HashSet<Integer> elements = new HashSet<>();
+
+        // Add elements from the first array to the HashSet.
+        for (int i : arr1)
+            elements.add(i);
+
+        // Add elements from the second array to the same HashSet.
+        for (int i : arr2)
+            elements.add(i);
+
+        return elements.size();
+    }
+
+    /**
      * Returns the current frequency of the given value.
      *
      * Returns 0 if the value does not exist in the frequency map.
