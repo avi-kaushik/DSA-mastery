@@ -68,6 +68,89 @@ public class SubArrayWithSums {
         return false;
     }
 
+    /*
+     * Problem:
+     * --------
+     * Given an array and a target sum, determine whether there exists
+     * a sub-array whose sum is equal to the given sum.
+     *
+     *
+     * Approach:
+     * ---------
+     * Use Prefix Sum + HashSet.
+     *
+     * 
+     * Let:
+     *
+     * currentPrefixSum - previousPrefixSum = targetSum
+     *
+     * Therefore:
+     *
+     * previousPrefixSum = currentPrefixSum - targetSum
+     *
+     * For every current prefix sum, check whether
+     * (currentPrefixSum - targetSum) already exists in the HashSet.
+     *
+     * If it exists, then the elements between the previous prefix sum
+     * and current prefix sum form a sub-array whose sum is equal
+     * to the target sum.
+     *
+     *
+     * Why HashSet?
+     * ------------
+     * We only need to know whether a prefix sum has appeared before.
+     * We don't need to store its index.
+     *
+     * HashSet provides average O(1) lookup.
+     *
+     *
+     * Time Complexity:
+     * ----------------
+     * O(n)
+     *
+     * The array is traversed only once.
+     *
+     *
+     * Space Complexity:
+     * -----------------
+     * O(n)
+     *
+     * In the worst case, all prefix sums can be different.
+     */
+    public static boolean isSubArrayWithGivenSumPresent(int[] arr, int sum) {
+
+        HashSet<Integer> prefixSums = new HashSet<>();
+
+        int previousSum = 0;
+
+        for (int num : arr) {
+
+            // Calculate current prefix sum
+            previousSum += num;
+
+            /*
+             * Check two possibilities:
+             *
+             * 1. Current prefix sum equals the target sum.
+             * -> Sub-array starts from index 0.
+             *
+             * 2. A previous prefix sum exists such that:
+             *
+             * currentPrefixSum - previousPrefixSum = targetSum
+             *
+             * -> Sub-array starts somewhere after index 0.
+             */
+            if (previousSum == sum || prefixSums.contains(previousSum - sum)) {
+                return true;
+            }
+
+            // Store prefix sum for future comparisons
+            prefixSums.add(previousSum);
+        }
+
+        return false;
+    }
+
     public static void main(String[] args) {
 
         int[] arr = { 1, 4, 13, -3, -10, 5 };
@@ -77,5 +160,9 @@ public class SubArrayWithSums {
         System.out.println(
                 "Is sub-array present with 0 sum: "
                         + isSubArrayWithZeroSumPresent(arr));
+
+        System.out.println(
+                "Is sub-array present with sum 14: "
+                        + isSubArrayWithGivenSumPresent(arr, 14));
     }
 }
