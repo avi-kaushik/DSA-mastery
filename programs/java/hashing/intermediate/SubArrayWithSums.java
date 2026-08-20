@@ -1,6 +1,7 @@
 package programs.java.hashing.intermediate;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class SubArrayWithSums {
@@ -151,6 +152,43 @@ public class SubArrayWithSums {
         return false;
     }
 
+    /**
+     * Finds the length of the longest contiguous subarray whose sum equals the
+     * given sum.
+     *
+     * Uses prefix sums and a HashMap to store the first occurrence of each prefix
+     * sum.
+     *
+     * Time Complexity: O(n)
+     * Space Complexity: O(n)
+     */
+    public static int longestSubArrayWithGivenSum(int[] arr, int sum) {
+        HashMap<Integer, Integer> prefixSums = new HashMap<>();
+
+        int prefixSum = 0;
+        int longest = 0;
+
+        for (int i = 0; i < arr.length; i++) {
+            prefixSum += arr[i];
+
+            // Handles subarrays starting from index 0.
+            if (prefixSum == sum) {
+                longest = i + 1;
+            }
+
+            // Find the previous prefix sum required to form the target sum.
+            if (prefixSums.containsKey(prefixSum - sum)) {
+                int length = i - prefixSums.get(prefixSum - sum);
+                longest = Math.max(longest, length);
+            }
+
+            // Keep the first occurrence to maximize the subarray length.
+            prefixSums.putIfAbsent(prefixSum, i);
+        }
+
+        return longest;
+    }
+
     public static void main(String[] args) {
 
         int[] arr = { 1, 4, 13, -3, -10, 5 };
@@ -164,5 +202,9 @@ public class SubArrayWithSums {
         System.out.println(
                 "Is sub-array present with sum 14: "
                         + isSubArrayWithGivenSumPresent(arr, 14));
+
+        System.out.println(
+                "Longest sub-array present with sum 5: "
+                        + longestSubArrayWithGivenSum(arr, 5));
     }
 }
