@@ -2,7 +2,7 @@ package programs.java.hashing.intermediate;
 
 import java.util.HashMap;
 
-public class Occurences {
+public class Occurrences {
 
     /**
      * Prints elements occurring more than n/k times in the given array.
