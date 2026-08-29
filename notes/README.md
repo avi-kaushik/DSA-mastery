@@ -31,6 +31,20 @@ notes/
 | 001 | Introduction to Data Structures & Algorithms | [001-introduction-to-dsa.md](001-getting-started/001-introduction-to-dsa.md) |
 | 002 | Why Learn DSA: Advantages, Applications & Competitive Programming | [002-why-learn-dsa.md](001-getting-started/002-why-learn-dsa.md) |
 
+### 002 — Analysis of Algorithms
+
+| # | Topic | Notes |
+|---|---|---|
+| 001 | Analysis of Algorithms & Asymptotic Analysis | [001-asymptotic-analysis.md](002-analysis-of-algorithms/001-asymptotic-analysis.md) |
+| 002 | Order of Growth | [002-order-of-growth.md](002-analysis-of-algorithms/002-order-of-growth.md) |
+| 003 | Best, Average & Worst Case | [003-best-average-worst-case.md](002-analysis-of-algorithms/003-best-average-worst-case.md) |
+| 004 | Asymptotic Notations (Overview) | [004-asymptotic-notations.md](002-analysis-of-algorithms/004-asymptotic-notations.md) |
+| 005 | Big-O Notation (Upper Bound) | [005-big-o-notation.md](002-analysis-of-algorithms/005-big-o-notation.md) |
+| 006 | Omega Notation (Lower Bound) | [006-omega-notation.md](002-analysis-of-algorithms/006-omega-notation.md) |
+| 007 | Theta Notation (Tight Bound) | [007-theta-notation.md](002-analysis-of-algorithms/007-theta-notation.md) |
+| 008 | Analysis of Loops | [008-analysis-of-loops.md](002-analysis-of-algorithms/008-analysis-of-loops.md) |
+| 009 | Math Refresher for Complexity Analysis | [009-math-refresher.md](002-analysis-of-algorithms/009-math-refresher.md) |
+
 ---
 
 ## ✍️ Note Format Convention
