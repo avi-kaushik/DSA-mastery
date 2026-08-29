@@ -29,11 +29,12 @@
 
   "customizations": {
     "vscode": {
-      // Same two extensions as .vscode/extensions.json. That file only
+      // Same extensions as .vscode/extensions.json. That file only
       // *recommends*; listing them here is what actually installs them in the
       // container.
       "extensions": [
         "esbenp.prettier-vscode",
+        "docsmsft.docs-preview",
         "vscjava.vscode-java-pack"
       ]
     }
