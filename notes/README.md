@@ -1,0 +1,49 @@
+# 📒 DSA Notes
+
+Short, revision-ready notes on Data Structures and Algorithms.
+
+Each note is a **summary, not a deep dive** — enough to recall a whole topic in a few
+minutes and to answer it confidently in an interview.
+
+---
+
+## 🗂️ How These Notes Are Organised
+
+```text
+notes/
+├── README.md                         ← this index
+└── <NNN>-<category>/                 ← one folder per topic area
+    └── <NNN>-<topic>.md              ← one file per topic, in reading order
+```
+
+- Folder prefix `001-`, `002-`, … → order of the topic areas
+- File prefix `001-`, `002-`, … → order within a topic area
+- Every note ends with a **Quick Recall** table for last-minute revision.
+
+---
+
+## 📚 Index
+
+### 001 — Getting Started
+
+| # | Topic | Notes |
+|---|---|---|
+| 001 | Introduction to Data Structures & Algorithms | [001-introduction-to-dsa.md](001-getting-started/001-introduction-to-dsa.md) |
+| 002 | Why Learn DSA: Advantages, Applications & Competitive Programming | [002-why-learn-dsa.md](001-getting-started/002-why-learn-dsa.md) |
+
+---
+
+## ✍️ Note Format Convention
+
+Every note follows the same skeleton so revision is predictable:
+
+```text
+# <NNN> — <Title>
+> One-line takeaway
+
+1..n  Concept sections (definition → why → diagram → example)
+      Quick Recall — interview one-liners table
+      Mental model / summary diagram
+```
+
+Related code lives in [`programs/`](../programs/).
