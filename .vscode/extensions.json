@@ -1,7 +1,6 @@
 {
     "recommendations": [
         "esbenp.prettier-vscode",
-        "docsmsft.docs-preview",
         "vscjava.vscode-java-pack",
     ]
 }
