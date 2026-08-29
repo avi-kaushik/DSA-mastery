@@ -1,9 +1,0 @@
-services:
-  java:
-    build:
-      context: .
-    container_name: dsa-mastery
-    working_dir: /code
-    volumes:
-      - ./:/code
-    command: sleep infinity

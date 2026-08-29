@@ -1,0 +1,41 @@
+// Dev Container for DSA-Mastery.
+// Reference: https://containers.dev/implementors/json_reference/
+{
+  "name": "DSA Mastery (Java 21)",
+
+  // Uses the repo's existing Dockerfile as-is — no docker compose involved.
+  // Paths are relative to THIS file, so ".." is the repo root.
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+
+  // Keep the workspace at /code. Without these two lines Dev Containers would
+  // mount at /workspaces/DSA-mastery and diverge from the Dockerfile's WORKDIR
+  // and from docker-run.bat.
+  "workspaceMount": "source=${localWorkspaceFolder},target=/code,type=bind",
+  "workspaceFolder": "/code",
+
+  // eclipse-temurin ships no non-root user, and a Docker Desktop bind mount from
+  // NTFS presents every file as uid=0, which already matches root in the
+  // container. root is the correct and simplest choice here.
+  "remoteUser": "root",
+
+  // Persists the VS Code server and its installed extensions across container
+  // rebuilds, so a rebuild is seconds instead of minutes.
+  "mounts": [
+    "source=dsa-mastery-vscode-server,target=/root/.vscode-server,type=volume"
+  ],
+
+  "customizations": {
+    "vscode": {
+      // Same two extensions as .vscode/extensions.json. That file only
+      // *recommends*; listing them here is what actually installs them in the
+      // container.
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "vscjava.vscode-java-pack"
+      ]
+    }
+  }
+}
