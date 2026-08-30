@@ -49,6 +49,7 @@ notes/
 | 012 | Solving Recurrences: Iteration & Substitution | [012-solving-recurrences.md](002-analysis-of-algorithms/012-solving-recurrences.md) |
 | 013 | Recursion Tree Method | [013-recursion-tree-method.md](002-analysis-of-algorithms/013-recursion-tree-method.md) |
 | 014 | Master Theorem | [014-master-theorem.md](002-analysis-of-algorithms/014-master-theorem.md) |
+| 015 | Space Complexity & Auxiliary Space | [015-space-complexity.md](002-analysis-of-algorithms/015-space-complexity.md) |
 
 ---
 
