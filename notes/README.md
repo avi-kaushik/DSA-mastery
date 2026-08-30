@@ -44,6 +44,11 @@ notes/
 | 007 | Theta Notation (Tight Bound) | [007-theta-notation.md](002-analysis-of-algorithms/007-theta-notation.md) |
 | 008 | Analysis of Loops | [008-analysis-of-loops.md](002-analysis-of-algorithms/008-analysis-of-loops.md) |
 | 009 | Math Refresher for Complexity Analysis | [009-math-refresher.md](002-analysis-of-algorithms/009-math-refresher.md) |
+| 010 | Progressions & Series for Algorithm Analysis | [010-progressions-and-series.md](002-analysis-of-algorithms/010-progressions-and-series.md) |
+| 011 | Recurrence Relations | [011-recurrence-relations.md](002-analysis-of-algorithms/011-recurrence-relations.md) |
+| 012 | Solving Recurrences: Iteration & Substitution | [012-solving-recurrences.md](002-analysis-of-algorithms/012-solving-recurrences.md) |
+| 013 | Recursion Tree Method | [013-recursion-tree-method.md](002-analysis-of-algorithms/013-recursion-tree-method.md) |
+| 014 | Master Theorem | [014-master-theorem.md](002-analysis-of-algorithms/014-master-theorem.md) |
 
 ---
 
