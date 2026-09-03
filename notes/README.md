@@ -51,6 +51,18 @@ notes/
 | 014 | Master Theorem | [014-master-theorem.md](002-analysis-of-algorithms/014-master-theorem.md) |
 | 015 | Space Complexity & Auxiliary Space | [015-space-complexity.md](002-analysis-of-algorithms/015-space-complexity.md) |
 
+### 003 — Mathematics
+
+| # | Topic | Notes |
+|---|---|---|
+| 001 | Number & Digit Basics | [001-number-and-digit-basics.md](003-mathematics/001-number-and-digit-basics.md) |
+| 002 | GCD, LCM & the Euclidean Algorithm | [002-gcd-lcm-euclidean.md](003-mathematics/002-gcd-lcm-euclidean.md) |
+| 003 | Primes, Divisors & Factorization | [003-primes-and-factorization.md](003-mathematics/003-primes-and-factorization.md) |
+| 004 | Fast Exponentiation (Binary Exponentiation) | [004-exponentiation.md](003-mathematics/004-exponentiation.md) |
+| 005 | Modular Arithmetic | [005-modular-arithmetic.md](003-mathematics/005-modular-arithmetic.md) |
+| 006 | Factorials & Combinatorics | [006-factorial-and-combinatorics.md](003-mathematics/006-factorial-and-combinatorics.md) |
+| 007 | Patterns & Cheat Sheet | [007-patterns-and-cheatsheet.md](003-mathematics/007-patterns-and-cheatsheet.md) |
+
 ---
 
 ## ✍️ Note Format Convention
