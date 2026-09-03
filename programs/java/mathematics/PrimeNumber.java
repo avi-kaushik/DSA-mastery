@@ -81,11 +81,87 @@ public class PrimeNumber {
         System.out.println();
     }
 
+    /**
+     * Prints all prime numbers from 1 to the given number.
+     *
+     * The algorithm handles 2 separately and then checks only odd numbers.
+     * Each odd number is tested for primality using the isPrime method.
+     *
+     * Checking only odd numbers avoids testing even numbers greater than 2,
+     * because every even number greater than 2 is composite.
+     *
+     * Time Complexity: O(n * sqrt(n))
+     * Space Complexity: O(1)
+     *
+     * @param n the upper limit of the range
+     */
+    public static void printPrimesInRange(int n) {
+
+        if (n >= 2)
+            System.out.print(2 + " ");
+
+        for (int i = 3; i <= n; i += 2) {
+            if (isPrime(i))
+                System.out.print(i + " ");
+        }
+
+        System.out.println();
+    }
+
+    /**
+     * Prints all prime numbers from 1 to the given number using the
+     * Sieve of Eratosthenes.
+     *
+     * The algorithm initially assumes that every number from 2 to n is
+     * prime. It then eliminates composite numbers by marking the multiples
+     * of each confirmed prime as non-prime.
+     *
+     * For each number i up to the square root of n, if i is still marked
+     * as prime, its multiples starting from i * i are marked as composite.
+     *
+     * Starting from i * i avoids unnecessary work because all smaller
+     * multiples of i have already been eliminated by smaller factors.
+     *
+     * After all possible prime factors up to the square root of n have
+     * been processed, every number that remains marked as prime is a
+     * prime number.
+     *
+     * Time Complexity: O(n log(log(n)))
+     * Space Complexity: O(n)
+     *
+     * @param n the upper limit of the range
+     */
+    public static void printPrimesInRangeUsingSieve(int n) {
+
+        boolean[] isPrime = new boolean[n + 1];
+
+        for (int i = 2; i <= n; i++)
+            isPrime[i] = true;
+
+        for (int i = 2; i * i <= n; i++) {
+            if (isPrime[i]) {
+                for (int j = i * i; j < isPrime.length; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+
+        for (int i = 0; i <= n; i++) {
+            if (isPrime[i])
+                System.out.print(i + " ");
+        }
+
+        System.out.println();
+    }
+
     public static void main(String[] args) {
 
         System.out.printf("Is %d prime? %s\n", 139, isPrime(139) ? "Yes" : "No");
 
         System.out.printf("Prime factors of %d: ", 21);
         printPrimeFactors(21);
+
+        System.out.printf("Prime numbers in range 1 to %d: ", 25);
+        printPrimesInRange(25);
     }
 }
