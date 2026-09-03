@@ -40,8 +40,52 @@ public class PrimeNumber {
         return true;
     }
 
+    /**
+     * Prints all prime factors of the given number.
+     *
+     * The algorithm checks potential factors starting from 2. Whenever a
+     * factor is found, it repeatedly divides the number by that factor
+     * until the factor is no longer present.
+     *
+     * Repeated division is necessary because a prime factor can occur
+     * multiple times in the prime factorization.
+     *
+     * The loop only checks factors up to the square root of the remaining
+     * number. After all possible factors have been removed, if the remaining
+     * number is greater than 1, it must itself be a prime factor.
+     *
+     * For example:
+     * 60 = 2 * 2 * 3 * 5
+     *
+     * Time Complexity: O(sqrt(n))
+     * Space Complexity: O(1)
+     *
+     * @param n the number whose prime factors are to be printed
+     */
+    public static void printPrimeFactors(int n) {
+
+        if (n == 1)
+            return;
+
+        for (int i = 2; i * i <= n; i++) {
+
+            while (n % i == 0) {
+                System.out.print(i + " ");
+                n = n / i;
+            }
+        }
+
+        if (n > 1)
+            System.out.print(n);
+
+        System.out.println();
+    }
+
     public static void main(String[] args) {
 
         System.out.printf("Is %d prime? %s\n", 139, isPrime(139) ? "Yes" : "No");
+
+        System.out.printf("Prime factors of %d: ", 21);
+        printPrimeFactors(21);
     }
 }
