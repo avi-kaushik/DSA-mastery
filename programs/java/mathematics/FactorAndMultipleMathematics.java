@@ -65,10 +65,54 @@ public class FactorAndMultipleMathematics {
         return (x / getHighestCommonFactor(x, y)) * y;
     }
 
+    /**
+     * Prints all divisors of the given number in ascending order.
+     *
+     * Divisors occur in pairs. If i is a divisor of n, then n / i is also
+     * a divisor of n.
+     *
+     * The first loop checks only up to the square root of n and prints the
+     * smaller divisor from each divisor pair.
+     *
+     * After the first loop, i is one position beyond the square root of n.
+     * The second loop goes backward from i - 1 and prints the corresponding
+     * larger divisor from each pair.
+     *
+     * The second loop starts from i - 1 because the value i itself was not
+     * checked by the first loop. This also prevents the square-root divisor
+     * from being printed twice when n is a perfect square.
+     *
+     * Time Complexity: O(sqrt(n))
+     * Space Complexity: O(1)
+     *
+     * @param n the number whose divisors are to be printed
+     */
+    public static void printDivisors(int n) {
+
+        int i;
+
+        for (i = 1; i * i <= n; i++) {
+
+            if (n % i == 0)
+                System.out.print(i + " ");
+        }
+
+        for (int j = i - 1; j >= 1; j--) {
+
+            if (n % j == 0)
+                System.out.print(n / j + " ");
+        }
+
+        System.out.println();
+    }
+
     public static void main(String[] args) {
 
         System.out.println("HCF of (90, 120): " + getHighestCommonFactor(90, 120));
 
         System.out.println("LCM of (90, 120): " + getLowestCommonMultiple(90, 120));
+
+        System.out.print("Divisors of 100: ");
+        printDivisors(100);
     }
 }
