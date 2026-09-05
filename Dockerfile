@@ -3,9 +3,10 @@ FROM eclipse-temurin:21-jdk-jammy
 # Set noninteractive frontend for clean install
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Optional: install Maven or Gradle
+# Tooling + the C++ toolchain (g++ compiler, gdb debugger, make).
 RUN apt-get update && apt-get install -y \
-    curl unzip git nano && \
+    curl unzip git nano \
+    g++ gdb make && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Create working directory

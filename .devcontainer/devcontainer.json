@@ -1,7 +1,7 @@
 // Dev Container for DSA-Mastery.
 // Reference: https://containers.dev/implementors/json_reference/
 {
-  "name": "DSA Mastery (Java 21)",
+  "name": "DSA Mastery (Java 21 + C++)",
 
   // Uses the repo's existing Dockerfile as-is — no docker compose involved.
   // Paths are relative to THIS file, so ".." is the repo root.
@@ -34,7 +34,8 @@
       // container.
       "extensions": [
         "esbenp.prettier-vscode",
-        "vscjava.vscode-java-pack"
+        "vscjava.vscode-java-pack",
+        "ms-vscode.cpptools"
       ]
     }
   }

@@ -40,7 +40,7 @@ DSA-Mastery/
 │       └── techniques/
 │
 ├── .devcontainer/                 ← VS Code Dev Container definition
-├── Dockerfile                     ← Java 21 (Eclipse Temurin) environment
+├── Dockerfile                     ← Java 21 (Eclipse Temurin) + g++ environment
 └── docker-run.bat                 ← one-click container start on Windows
 ```
 
@@ -110,13 +110,15 @@ class CheckSorted {
 
 ## 🛠️ Getting Started
 
-Requires **JDK 21** (or run it in the provided container, which already has it).
+Requires **JDK 21** and a **C++ compiler (g++)** — or run it in the provided container, which
+already has both.
 
 ### Option 1 — VS Code Dev Container (recommended)
 
 Open the repo in VS Code and choose **Reopen in Container**. The
 [`.devcontainer/`](.devcontainer/devcontainer.json) definition builds the
-[`Dockerfile`](Dockerfile), mounts the repo at `/code`, and installs the Java extension pack.
+[`Dockerfile`](Dockerfile), mounts the repo at `/code`, and installs the Java and C++
+extensions.
 
 ### Option 2 — Docker on Windows
 
@@ -131,13 +133,13 @@ Builds the image, starts a container named `dsa-mastery` with the repo bind-moun
 docker exec -it dsa-mastery bash
 ```
 
-### Option 3 — Local JDK
+### Option 3 — Local toolchain
 
-Nothing to install beyond a JDK 21 on your `PATH`.
+Nothing to install beyond a JDK 21 and a g++ on your `PATH`.
 
 ### Compile and run a program
 
-Always run from the **repository root**, because the packages are rooted there:
+**Java** — always run from the **repository root**, because the packages are rooted there:
 
 ```bash
 # compile
@@ -155,6 +157,19 @@ java -cp out programs.java.arrays.basic.CheckSorted
 ```
 
 `*.class` files are already git-ignored.
+
+**C++** — compile to a binary and run it:
+
+```bash
+# compile
+mkdir -p out
+g++ -std=c++17 -O2 -o out/CheckSorted programs/cpp/arrays/basic/CheckSorted.cpp
+
+# run
+./out/CheckSorted
+```
+
+Compiled binaries and object files are git-ignored too.
 
 ---
 
