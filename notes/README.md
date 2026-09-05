@@ -63,6 +63,14 @@ notes/
 | 006 | Factorials & Combinatorics | [006-factorial-and-combinatorics.md](003-mathematics/006-factorial-and-combinatorics.md) |
 | 007 | Patterns & Cheat Sheet | [007-patterns-and-cheatsheet.md](003-mathematics/007-patterns-and-cheatsheet.md) |
 
+### 004 — Bitwise Operations
+
+| # | Topic | Notes |
+|---|---|---|
+| 001 | Introduction to Bitwise Operations | [001-introduction-to-bitwise-operations.md](004-bitwise-operations/001-introduction-to-bitwise-operations.md) |
+| 002 | Bitwise Operators | [002-bitwise-operators.md](004-bitwise-operations/002-bitwise-operators.md) |
+| 003 | Binary Representation of Negative Numbers | [003-binary-representation-of-negative-numbers.md](004-bitwise-operations/003-binary-representation-of-negative-numbers.md) |
+
 ---
 
 ## ✍️ Note Format Convention
