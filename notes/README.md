@@ -71,6 +71,12 @@ notes/
 | 002 | Bitwise Operators | [002-bitwise-operators.md](004-bitwise-operations/002-bitwise-operators.md) |
 | 003 | Binary Representation of Negative Numbers | [003-binary-representation-of-negative-numbers.md](004-bitwise-operations/003-binary-representation-of-negative-numbers.md) |
 
+### 005 — Recursion
+
+| # | Topic | Notes |
+|---|---|---|
+| 001 | Introduction to Recursion | [001-introduction-to-recursion.md](005-recursion/001-introduction-to-recursion.md) |
+
 ---
 
 ## ✍️ Note Format Convention
