@@ -1,0 +1,58 @@
+# Line-ending policy for this repository.
+#
+# The repo is edited on Windows and built inside a Linux dev container that
+# bind-mounts the SAME working tree. Without these rules Git guesses per
+# environment (core.autocrlf), so a file checked out as CRLF on Windows shows
+# up as "modified" inside the container even though nothing changed.
+#
+# Rule: every text file is stored AND checked out as LF, everywhere.
+# `eol=lf` overrides core.autocrlf, so both environments agree.
+
+* text=auto eol=lf
+
+# ---------------------------------------------------------------------------
+# Windows-only scripts must keep CRLF — cmd.exe can misparse LF batch files.
+# ---------------------------------------------------------------------------
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.ps1   text eol=crlf
+
+# ---------------------------------------------------------------------------
+# Explicit text types (documentation, sources, configs)
+# ---------------------------------------------------------------------------
+*.md    text diff=markdown
+*.java  text diff=java
+*.cpp   text
+*.cc    text
+*.h     text
+*.hpp   text
+*.json  text
+*.xml   text
+*.yml   text
+*.yaml  text
+*.sh    text eol=lf
+Dockerfile text
+.gitignore text
+.gitattributes text
+
+# ---------------------------------------------------------------------------
+# Binary — never convert, never diff as text
+# ---------------------------------------------------------------------------
+*.class binary
+*.jar   binary
+*.war   binary
+*.ear   binary
+*.zip   binary
+*.tar.gz binary
+*.rar   binary
+*.exe   binary
+*.dll   binary
+*.so    binary
+*.o     binary
+*.out   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
