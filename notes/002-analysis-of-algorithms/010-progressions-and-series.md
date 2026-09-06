@@ -65,7 +65,27 @@ a, ar, ar², ar³, ...
 | nth term | `aₙ = a·rⁿ⁻¹` |
 | Sum of n terms (`r ≠ 1`) | `Sₙ = a(rⁿ − 1)/(r − 1)` |
 | Sum of n terms (`r = 1`) | `Sₙ = a·n` |
-| Infinite sum (`|r| < 1`) | `S∞ = a/(1 − r)` |
+| Infinite sum (`\|r\| < 1`) | `S∞ = a/(1 − r)` |
+
+### The infinite sum — `a/(1 − r)`
+
+When the ratio is less than 1, the terms shrink fast enough that even an **endless** GP
+adds up to a finite value:
+
+```text
+a + ar + ar² + ar³ + ...  =  a / (1 − r)        (only when |r| < 1)
+```
+
+```text
+n + n/2 + n/4 + ...      →  a = n, r = ½    →  n / (1 − ½)  =  2n
+n + 3n/4 + 9n/16 + ...   →  a = n, r = ¾    →  n / (1 − ¾)  =  4n
+1 + ⅓ + ⅑ + ...          →  a = 1, r = ⅓    →  1 / (1 − ⅓)  =  1.5
+```
+
+⚠️ For `r ≥ 1` there is no finite sum — use the `Sₙ` formula above and take the last term.
+
+> **Why this one matters most:** a shrinking recursion cost has exactly this shape, so the
+> whole series collapses to a single division instead of a level-by-level count.
 
 ### 🔑 The three regimes — memorise this
 
@@ -254,7 +274,7 @@ Consecutive terms cancel        → Telescoping → aₙ − a₀
 | Question | Crisp answer |
 |---|---|
 | **Sum of an AP?** | `n/2 · (first + last)`; `1+2+…+n = n(n+1)/2 = Θ(n²)`. |
-| **Sum of a GP?** | `a(rⁿ−1)/(r−1)`; infinite with `|r|<1` is `a/(1−r)`. |
+| **Sum of a GP?** | `a(rⁿ−1)/(r−1)`; infinite with `\|r\|<1` is `a/(1−r)`. |
 | **The key GP insight?** | `r>1` → dominated by the last term; `r<1` → dominated by the first term; `r=1` → terms × count. |
 | **Why is `n + n/2 + n/4 + …` only `Θ(n)`?** | It's a shrinking GP summing to `2n` even with infinite terms. |
 | **Why is dynamic-array append `O(1)` amortised?** | Doubling copies `1+2+…+n = 2n−1 = Θ(n)` total, spread over `n` appends. |
