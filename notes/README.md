@@ -76,6 +76,7 @@ notes/
 | # | Topic | Notes |
 |---|---|---|
 | 001 | Introduction to Recursion | [001-introduction-to-recursion.md](005-recursion/001-introduction-to-recursion.md) |
+| 002 | Tail Recursion | [002-tail-recursion.md](005-recursion/002-tail-recursion.md) |
 
 ---
 
