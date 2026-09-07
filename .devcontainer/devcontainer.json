@@ -33,7 +33,6 @@
       // *recommends*; listing them here is what actually installs them in the
       // container.
       "extensions": [
-        "esbenp.prettier-vscode",
         "vscjava.vscode-java-pack",
         "ms-vscode.cpptools"
       ]
