@@ -77,12 +77,18 @@ notes/
 |---|---|---|
 | 001 | Introduction to Recursion | [001-introduction-to-recursion.md](005-recursion/001-introduction-to-recursion.md) |
 | 002 | Tail Recursion | [002-tail-recursion.md](005-recursion/002-tail-recursion.md) |
+| 003 | Writing Base Cases | [003-writing-base-cases.md](005-recursion/003-writing-base-cases.md) |
+| 004 | Easy Recursion Problems | [004-easy-recursion-problems.md](005-recursion/004-easy-recursion-problems.md) |
+| 005 | Recursion Problem Patterns | [005-recursion-problem-patterns.md](005-recursion/005-recursion-problem-patterns.md) |
+| 006 | Classic Recursion Problems | [006-classic-recursion-problems.md](005-recursion/006-classic-recursion-problems.md) |
 
 ---
 
-## ✍️ Note Format Convention
+## ✍️ Note Formats
 
-Every note follows the same skeleton so revision is predictable:
+Notes come in two shapes, so revision is predictable.
+
+**Concept note** — explains an idea:
 
 ```text
 # <NNN> — <Title>
@@ -92,5 +98,24 @@ Every note follows the same skeleton so revision is predictable:
       Quick Recall — interview one-liners table
       Mental model / summary diagram
 ```
+
+**Problem card** — documents one specific tricky problem, for the cases where the
+implementation is easy to garble from memory:
+
+```text
+🎯 Problem      what is actually being asked
+💡 Insight      the ONE sentence that unlocks it
+🔁 Recurrence   the maths, before any code
+💻 Code         the implementation
+🔍 Trace        a small example, run by hand
+⏱️ Complexity   time and space, with the reason
+⚠️ Pitfalls     what goes wrong when writing it from memory
+🔀 Variants     the follow-ups an interviewer reaches for
+```
+
+Several cards live in one file, grouped by topic — see
+[Classic Recursion Problems](005-recursion/006-classic-recursion-problems.md). Each card
+names the reusable **pattern** behind it, keeping the transferable idea separate from the
+specific problem.
 
 Related code lives in [`programs/`](../programs/).
