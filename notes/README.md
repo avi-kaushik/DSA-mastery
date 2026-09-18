@@ -81,6 +81,7 @@ notes/
 | 004 | Easy Recursion Problems | [004-easy-recursion-problems.md](005-recursion/004-easy-recursion-problems.md) |
 | 005 | Recursion Problem Patterns | [005-recursion-problem-patterns.md](005-recursion/005-recursion-problem-patterns.md) |
 | 006 | Classic Recursion Problems | [006-classic-recursion-problems.md](005-recursion/006-classic-recursion-problems.md) |
+| 007 | The Subsets Pattern (Take / Don't Take) | [007-subsets-pattern.md](005-recursion/007-subsets-pattern.md) |
 
 ---
 

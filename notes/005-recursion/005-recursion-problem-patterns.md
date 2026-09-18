@@ -191,6 +191,10 @@ Cost:     O(2ⁿ) for subsets, O(n!) for permutations
 **Signal:** *"generate all …"* or *"find every combination that …"*.
 ⚠️ The `undo` step is what makes it backtracking rather than plain recursion.
 
+> Full treatment — the decision tree, the template and the four knobs — in
+> [The Subsets Pattern](007-subsets-pattern.md).
+
+📄 [`subsets.cpp`](../../programs/cpp/techniques/recursion/subsets.cpp) ·
 📄 [`GenerateSubset.java`](../../programs/java/techniques/recursion/intermediate/GenerateSubset.java) ·
 📄 [`Permutations.java`](../../programs/java/techniques/recursion/intermediate/Permutations.java)
 
