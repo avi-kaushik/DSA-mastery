@@ -140,7 +140,113 @@ Space             O(n)          the call stack is n deep
 
 ---
 
-## 7. Common Mistakes
+## 7. Same Tree, Different Question — Subset Sum
+
+📄 [`subsets.cpp`](../../programs/cpp/techniques/recursion/subsets.cpp)
+
+**Problem:** count how many subsets of an array add up to a target sum.
+
+### The one idea that makes it easy
+
+The obvious plan is to build each subset, add it up, and compare. That's a lot of work.
+
+> **You never need the subset itself — only how much of the target is left.**
+> So carry the **remaining sum** down instead of the subset. Taking an element means
+> subtracting it. At the bottom, a subset worked if the remaining sum landed exactly on `0`.
+
+```text
+build the subset, then add it up      ✗ slow and fiddly
+subtract as you go, check for 0       ✓ one int travels down the tree
+```
+
+### The code
+
+```cpp
+int subset_sum(int arr[], int depth, int sum)
+{
+    // No elements left — did we land exactly on the target?
+    if (depth == 0)
+        return sum == 0 ? 1 : 0;
+
+    // ✗ skip arr[depth - 1]  → the sum still needed is unchanged
+    int exclude = subset_sum(arr, depth - 1, sum);
+
+    // ✓ use arr[depth - 1]   → the sum still needed shrinks
+    int include = subset_sum(arr, depth - 1, sum - arr[depth - 1]);
+
+    // count what both halves found
+    return exclude + include;
+}
+```
+
+### The tree — `{4, 2, 6}`, target `6`
+
+```text
+depth 3 · use 6?   │                          sum=6
+                   │             ┌──────────────┴──────────────┐
+                   │            ✗ 6                           ✓ 6
+depth 2 · use 2?   │           sum=6                         sum=0
+                   │      ┌──────┴──────┐               ┌──────┴──────┐
+                   │     ✗ 2           ✓ 2             ✗ 2           ✓ 2
+depth 1 · use 4?   │    sum=6         sum=4           sum=0        sum=-2
+                   │   ┌──┴───┐      ┌──┴───┐        ┌──┴───┐      ┌──┴───┐
+                   │  ✗4     ✓4     ✗4     ✓4       ✗4     ✓4     ✗4     ✓4
+depth 0 · sum left │   6      2      4      0        0     -4     -2     -6
+           count?  │   ✗      ✗      ✗      ✓        ✓      ✗      ✗      ✗
+```
+
+```text
+Two leaves land on 0  →  answer 2      the subsets {4, 2} and {6}
+```
+
+### What actually changed from `print_subsets`
+
+The tree is identical. Only three things differ:
+
+| | `print_subsets` | `subset_sum` |
+|---|---|---|
+| **What travels down** | the subset built so far | the sum still needed |
+| **At the bottom** | print it | `return sum == 0 ? 1 : 0` |
+| **Combining the two calls** | nothing — both just print | `exclude + include` |
+
+> **That's the pattern to recognise.** Skip/take stays the same; a problem changes only
+> *what you carry down* and *what you do at the bottom*.
+
+### Which end it starts from
+
+`print_subsets` decides the **first** character and counts `depth` up.
+`subset_sum` decides the **last** element and counts `depth` down (`arr[depth - 1]`).
+
+Same tree, mirrored — and counting down is exactly the "build from a smaller problem" idea
+from §2:
+
+```text
+count(first 3 elements) = count(first 2, same target)          ← skip the 3rd
+                        + count(first 2, target − arr[2])      ← use the 3rd
+```
+
+### Complexity
+
+```text
+Time    O(2ⁿ)     two calls per element; each leaf is a single comparison
+Space   O(n)      the call stack
+```
+
+> Note there's **no extra `n`** here, unlike `print_subsets`'s `O(n · 2ⁿ)` — nothing is
+> built or printed, just one integer passed around.
+
+### Watch out
+
+| ✗ Mistake | Result |
+|---|---|
+| Returning only `include` | Half the tree is ignored — you must add both |
+| `return sum == 0` at `depth == 0` only if something was picked | The empty subset legitimately sums to 0; for target 0 the answer includes it |
+| Assuming equal values are one subset | It counts by **position**, so `{4, …, 4}` gives two different subsets |
+| Adding `if (sum < 0) return 0;` blindly | A valid speed-up **only when all numbers are positive**; with negatives a branch can recover |
+
+---
+
+## 8. Common Mistakes
 
 | ✗ Mistake | Result |
 |---|---|
@@ -151,7 +257,7 @@ Space             O(n)          the call stack is n deep
 
 ---
 
-## 8. Quick Recall
+## 9. Quick Recall
 
 | Question | Answer |
 |---|---|
@@ -166,7 +272,7 @@ Space             O(n)          the call stack is n deep
 
 ---
 
-## 9. The Mental Model
+## 10. The Mental Model
 
 ```text
           one character  →  skip it  or  take it
