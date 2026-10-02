@@ -81,6 +81,60 @@ int last_occurrence(int arr[], int size, int target)
 }
 
 /**
+ * @brief Counts how many times a target value occurs in an array recursively.
+ *
+ * Recursive state:
+ * - count_occurrence(arr, size, target) represents the number of
+ *   occurrences of `target` among the first `size` elements.
+ *
+ * Recursive idea:
+ * - The recursive call counts occurrences of the target among
+ *   the first `size - 1` elements:
+ *
+ *      count_occurrence(arr, size - 1, target)
+ *
+ * - The current last element is then checked:
+ *
+ *      arr[size - 1]
+ *
+ * - If the current element matches the target, it contributes
+ *   1 to the total count; otherwise, it contributes 0.
+ *
+ * Recursive relation:
+ *
+ *      count(size)
+ *      = (arr[size - 1] == target ? 1 : 0)
+ *        + count(size - 1)
+ *
+ * Base case:
+ * - size = 0
+ *      An empty array contains zero occurrences of the target.
+ *
+ * @param arr Array in which occurrences need to be counted.
+ * @param size Number of elements currently being considered.
+ * @param target Value whose occurrences need to be counted.
+ *
+ * @return Number of times `target` occurs among the first
+ *         `size` elements.
+ *
+ * @complexity
+ * Time: O(n)
+ * - Each element is checked exactly once.
+ *
+ * Space: O(n)
+ * - The recursion stack can grow up to `n` calls.
+ */
+int count_occurrence(int arr[], int size, int target)
+{
+    if (size == 0)
+        return 0;
+
+    int index = size - 1;
+
+    return (arr[index] == target ? 1 : 0) + count_occurrence(arr, size - 1, target);
+}
+
+/**
  * @brief Checks whether an array is sorted in non-decreasing order using recursion.
  *
  * The function compares the current element with the next element.
@@ -227,6 +281,10 @@ int main()
 
     cout << "Index of Last Occurrence of " << target << " is: "
          << last_occurrence(arr, size, target)
+         << endl;
+
+    cout << "Number of Occurrences of " << target << " are: "
+         << count_occurrence(arr, size, target)
          << endl;
 
     cout << "Is array sorted? " << is_sorted(arr, size) << endl;
