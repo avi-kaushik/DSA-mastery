@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include "../../include/arrays/print.h"
 
@@ -108,6 +109,108 @@ bool is_sorted(int arr[], int size, int index = 0)
            is_sorted(arr, size, index + 1);
 }
 
+/**
+ * @brief Finds the minimum element in an array recursively.
+ *
+ * Recursive state:
+ * - get_minimum(arr, size) represents the minimum value
+ *   among the first `size` elements of the array.
+ *
+ * Recursive idea:
+ * - The recursive call finds the minimum among the first
+ *   `size - 1` elements:
+ *
+ *      get_minimum(arr, size - 1)
+ *
+ * - The result is then compared with the current last element:
+ *
+ *      arr[size - 1]
+ *
+ * - The smaller value becomes the minimum for the first
+ *   `size` elements.
+ *
+ * Recursive relation:
+ *
+ *      minimum(size)
+ *      = min(minimum(size - 1), arr[size - 1])
+ *
+ * Base case:
+ * - size = 1
+ *      A single-element array has that element as its minimum.
+ *
+ * @param arr Array whose minimum element needs to be found.
+ * @param size Number of elements currently being considered.
+ *
+ * @return Minimum value among the first `size` elements.
+ *
+ * @complexity
+ * Time: O(n)
+ * - Each element is processed once.
+ *
+ * Space: O(n)
+ * - The recursion stack can grow up to `n` calls.
+ */
+int get_minimum(int arr[], int size)
+{
+    if (size == 1)
+        return arr[0];
+
+    int index = size - 1;
+
+    return min(get_minimum(arr, size - 1), arr[index]);
+}
+
+/**
+ * @brief Finds the maximum element in an array recursively.
+ *
+ * Recursive state:
+ * - get_maximum(arr, size) represents the maximum value
+ *   among the first `size` elements of the array.
+ *
+ * Recursive idea:
+ * - The recursive call finds the maximum among the first
+ *   `size - 1` elements:
+ *
+ *      get_maximum(arr, size - 1)
+ *
+ * - The result is then compared with the current last element:
+ *
+ *      arr[size - 1]
+ *
+ * - The larger value becomes the maximum for the first
+ *   `size` elements.
+ *
+ * Recursive relation:
+ *
+ *      maximum(size)
+ *      = max(maximum(size - 1), arr[size - 1])
+ *
+ * Base case:
+ * - size = 1
+ *      A single-element array has that element as its maximum.
+ *
+ * @param arr Array whose maximum element needs to be found.
+ * @param size Number of elements currently being considered.
+ *
+ * @return Maximum value among the first `size` elements.
+ *
+ * @complexity
+ * Time: O(n)
+ * - Each element is processed once.
+ *
+ * Space: O(n)
+ * - The recursion stack can grow up to `n` calls.
+ */
+int get_maximum(int arr[], int size)
+{
+    if (size == 1)
+        return arr[0];
+
+    int index = size - 1;
+
+    return max(get_maximum(arr, size - 1), arr[index]);
+}
+
 int main()
 {
     int arr[] = {1, 3, 9, 15, 14, 9, 37};
@@ -126,7 +229,11 @@ int main()
          << last_occurrence(arr, size, target)
          << endl;
 
-    cout << "Is array sorted? " << is_sorted(arr, size);
+    cout << "Is array sorted? " << is_sorted(arr, size) << endl;
+
+    cout << "Mimimum value in the array: " << get_minimum(arr, size) << endl;
+
+    cout << "Maximum value in the array: " << get_maximum(arr, size) << endl;
 
     return 0;
 }
