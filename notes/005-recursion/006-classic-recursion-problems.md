@@ -1,6 +1,6 @@
 # 006 — Classic Recursion Problems
 
-> **One-line takeaway:** Three famously tricky problems — and they are tricky for **three different reasons**. Rope Cutting is about representing *impossible*, Hanoi is about *moving the obstruction*, Josephus is about *renumbering*. Learn the reason, not the code.
+> **One-line takeaway:** Four famously tricky problems, each tricky for a **different reason**. Rope Cutting is about representing *impossible*, Hanoi about *moving the obstruction*, Josephus about *renumbering*, Climbing Stairs about *counting routes instead of listing them*. Learn the reason, not the code.
 
 ---
 
@@ -323,23 +323,139 @@ Huge n, small k         → O(k log n) skipping formula
 
 ---
 
-## Comparing the Three
+# Card 4 — Climbing Stairs
+
+**Pattern 4 — Best-of-Choices (counting variant)** · 📄 [`staircase.cpp`](../../programs/cpp/techniques/recursion/staircase.cpp)
+
+### 🎯 Problem
+
+You can climb either **1 step or 2 steps** at a time. In how many distinct ways can you
+reach the top of a staircase of `n` steps?
+
+```text
+n = 5  →  8 ways
+```
+
+### 💡 Insight
+
+> **Look at the *last* move you made. It was either a 1-step or a 2-step.**
+>
+> If it was a 1-step, you were standing at `n−1` before it. If it was a 2-step, you were at
+> `n−2`. Those two groups of routes share nothing and cover everything, so just **add**
+> them.
+
+```text
+ways(n) = ways(n − 1) + ways(n − 2)
+             ↑              ↑
+     arrived by 1-step   arrived by 2-step
+```
+
+> This is the same skip/take shape as subsets, but the two branches are **added** instead of
+> both printing — you want the *count* of routes, not the routes themselves.
+
+### 🔁 Recurrence
+
+```text
+ways(n) = ways(n − 1) + ways(n − 2)
+ways(0) = 1      ← one way to "already be there": take no more steps
+ways(1) = 1      ← a single step
+```
+
+### 💻 Code
+
+```cpp
+int maximum_staircase_steps(int n)
+{
+    // 0 or 1 remaining stairs has exactly one valid completion
+    if (n <= 1)
+        return 1;
+
+    return maximum_staircase_steps(n - 1) +
+           maximum_staircase_steps(n - 2);
+}
+```
+
+### 🔍 Trace — `n = 5`
+
+Build it bottom-up and the pattern is unmistakable:
+
+```text
+ways(0) = 1
+ways(1) = 1
+ways(2) = 1 + 1 = 2        (1+1, 2)
+ways(3) = 2 + 1 = 3        (1+1+1, 1+2, 2+1)
+ways(4) = 3 + 2 = 5
+ways(5) = 5 + 3 = 8   ✓
+```
+
+### 🧠 It's Fibonacci in Disguise
+
+```text
+ways : 1  1  2  3  5  8  13          (n = 0 …)
+fib  : 0  1  1  2  3  5  8  13       (n = 0 …)
+```
+
+```text
+ways(n) = fib(n + 1)
+```
+
+Same recurrence, shifted base cases. So everything from
+[note 004 §10](004-easy-recursion-problems.md) applies: it recomputes the same subproblems,
+so it's exponential, and memoisation fixes it.
+
+### ⏱️ Complexity
+
+```text
+Time   O(2ⁿ)     two calls per level, with heavy recomputation
+Space  O(n)      the deepest path is all 1-steps
+
+With memoisation:  O(n) time, O(n) space
+Two rolling variables:  O(n) time, O(1) space
+```
+
+### ⚠️ Pitfalls
+
+| ✗ Mistake | Result |
+|---|---|
+| `ways(0) = 0` | Every count collapses — the empty route is a real way to be at the top |
+| Only `if (n == 1) return 1;` | `ways(2)` recurses into `ways(0)` with no base → runs away |
+| Thinking order doesn't matter | `1+2` and `2+1` are **different** routes; this counts sequences, not combinations |
+| Leaving it exponential | `n = 45` is already too slow — memoise or iterate |
+
+### 🔀 Variants
+
+```text
+Steps of 1, 2 or 3          → add a third call: ways(n−1) + ways(n−2) + ways(n−3)
+Steps from a given set      → loop over the allowed step sizes and sum
+Minimum number of jumps     → swap + for min, and add 1 per move (→ rope cutting)
+Some steps are broken       → return 0 for a blocked step — this is pruning
+Count ways mod 1e9+7        → the usual follow-up once n gets large
+```
+
+---
+
+## Comparing the Four
 
 The reason these are grouped: **same difficulty label, completely different reasoning.**
 
-| | Rope Cutting | Tower of Hanoi | Josephus |
-|---|---|---|---|
-| **Pattern** | Best-of-choices | Solve–act–solve | Position remapping |
-| **Recurrence** | `1 + max(f(n−a),f(n−b),f(n−c))` | `2T(n−1) + 1` | `(J(n−1)+k) mod n` |
-| **Calls per level** | 3 | 2 | 1 |
-| **Time** | `O(3ⁿ)` → `O(n)` memoised | `O(2ⁿ)` — optimal | `O(n)` |
-| **The hard part** | Representing *impossible* | Permuting the rod arguments | Seeing the renumbering |
-| **Memoisation helps?** | ✅ Yes, hugely | ❌ No — nothing repeats | ❌ No — already linear |
-| **Leads to** | Dynamic programming | Divide & conquer | Closed-form maths |
+| | Rope Cutting | Tower of Hanoi | Josephus | Climbing Stairs |
+|---|---|---|---|---|
+| **Pattern** | Best-of-choices | Solve–act–solve | Position remapping | Best-of-choices (counting) |
+| **Recurrence** | `1 + max(f(n−a),f(n−b),f(n−c))` | `2T(n−1) + 1` | `(J(n−1)+k) mod n` | `f(n−1) + f(n−2)` |
+| **Calls per level** | 3 | 2 | 1 | 2 |
+| **Combine with** | `max` | nothing — it prints | nothing — it transforms | `+` |
+| **Time** | `O(3ⁿ)` → `O(n)` memoised | `O(2ⁿ)` — optimal | `O(n)` | `O(2ⁿ)` → `O(n)` memoised |
+| **The hard part** | Representing *impossible* | Permuting the rod arguments | Seeing the renumbering | Trusting `ways(0) = 1` |
+| **Memoisation helps?** | ✅ Yes, hugely | ❌ No — nothing repeats | ❌ No — already linear | ✅ Yes, hugely |
+| **Leads to** | Dynamic programming | Divide & conquer | Closed-form maths | Dynamic programming |
 
-> **The takeaway:** "exponential" means different things. Rope cutting is exponential
-> because it *recomputes*; Hanoi is exponential because the *answer* is. Only the first one
-> can be fixed.
+> **The takeaway:** "exponential" means different things. Rope cutting and climbing stairs
+> are exponential because they *recompute*; Hanoi is exponential because the *answer* is.
+> Only the recomputing kind can be fixed.
+
+> **Rope cutting vs climbing stairs** are worth comparing directly — identical shape, one
+> swapped operator. `max` asks *"what's the best route?"*; `+` asks *"how many routes are
+> there?"*
 
 ---
 
@@ -358,4 +474,8 @@ The reason these are grouped: **same difficulty label, completely different reas
 | **Why does the `+k` shift work?** | After one elimination it's the same problem with `n−1` people renumbered, so the smaller answer shifts back by `k`. |
 | **Josephus for `k = 2`?** | With `n = 2^m + l`, the 1-based survivor is `2l + 1`. |
 | **Josephus in `O(1)` space?** | Iterate the recurrence: `res = (res + k) % i` for `i = 2 … n`. |
-| **What do these three have in common?** | Only the label "intermediate" — they use three different patterns, which is exactly why they're worth grouping. |
+| **Climbing-stairs recurrence?** | `ways(n) = ways(n-1) + ways(n-2)`, with `ways(0) = ways(1) = 1`. |
+| **Why is `ways(0) = 1`?** | Standing at the top is one valid completion — taking no further steps. |
+| **How is climbing stairs related to Fibonacci?** | Same recurrence, shifted base: `ways(n) = fib(n+1)`. |
+| **Rope cutting vs climbing stairs?** | Identical shape; `max` finds the best route, `+` counts all routes. |
+| **What do these four have in common?** | Only the label "intermediate" — they use different patterns, which is exactly why they're worth grouping. |

@@ -58,6 +58,8 @@ Time O(n) · Space O(n) stack
 
 ## 3. Factorial
 
+📄 [`print_numbers.cpp`](../../programs/cpp/techniques/recursion/print_numbers.cpp)
+
 ```cpp
 int factorial(int n) {
     if (n == 0) return 1;                 // identity for multiplication
@@ -77,6 +79,8 @@ Time O(n) · Space O(n)
 
 ## 4. Sum of 1 to N
 
+📄 [`print_numbers.cpp`](../../programs/cpp/techniques/recursion/print_numbers.cpp)
+
 ```cpp
 int sum(int n) {
     if (n == 0) return 0;                 // identity for addition
@@ -95,6 +99,8 @@ Time O(n) · Space O(n)
 ---
 
 ## 5. Sum of Digits
+
+📄 [`print_numbers.cpp`](../../programs/cpp/techniques/recursion/print_numbers.cpp)
 
 ```cpp
 int sum_of_digits(int n) {
@@ -204,6 +210,8 @@ Tail recursive. Time O(log min(a,b)) · Space O(log n), or O(1) with TCO at -O2.
 ---
 
 ## 10. Fibonacci — and Why It's the Odd One Out
+
+📄 [`print_numbers.cpp`](../../programs/cpp/techniques/recursion/print_numbers.cpp)
 
 ```cpp
 int fib(int n) {
