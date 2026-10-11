@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <string>
 #include "../../include/arrays/print.h"
 
 using namespace std;
@@ -265,6 +266,58 @@ int get_maximum(int arr[], int size)
     return max(get_maximum(arr, size - 1), arr[index]);
 }
 
+/**
+ * @brief Prints all possible subsequences of an integer array.
+ *
+ * Uses the recursive Include/Exclude technique to generate every
+ * subsequence while preserving the relative order of elements.
+ *
+ * At each recursion level, two choices are explored:
+ * 1. Exclude the element at the current index.
+ * 2. Include the element at the current index.
+ *
+ * A subsequence is printed when all array elements have been processed.
+ * The empty subsequence is also included.
+ *
+ * @param arr      Input integer array.
+ * @param length   Number of elements in the array.
+ * @param current  String representing the subsequence constructed so far.
+ *                 Defaults to an empty string.
+ * @param depth    Current array index being processed.
+ *                 Defaults to 0.
+ *
+ * @note The function prints subsequences directly to standard output.
+ *       It does not modify the input array.
+ *
+ * @note Duplicate array elements may produce duplicate subsequences.
+ *
+ * @complexity
+ * Time:  O(n * 2^n) - Generates 2^n subsequences, each requiring
+ *                    up to O(n) work to construct and print.
+ * Space: O(n^2)     - O(n) recursion depth and up to O(n^2)
+ *                    auxiliary space for strings along a recursion path,
+ *                    assuming bounded-width integer representations.
+ */
+void print_subsequences(int arr[], int length, string current = "", int depth = 0)
+{
+    // Base case: All elements have been considered.
+    if (length == depth)
+    {
+        cout << "[" << current << "]" << " ";
+        return;
+    }
+
+    // Choice 1: Exclude the current element.
+    print_subsequences(arr, length, current, depth + 1);
+
+    // Choice 2: Include the current element.
+    print_subsequences(
+        arr,
+        length,
+        current + (current.length() > 0 ? "," : "") + to_string(arr[depth]),
+        depth + 1);
+}
+
 int main()
 {
     int arr[] = {1, 3, 9, 15, 14, 9, 37};
@@ -292,6 +345,11 @@ int main()
     cout << "Mimimum value in the array: " << get_minimum(arr, size) << endl;
 
     cout << "Maximum value in the array: " << get_maximum(arr, size) << endl;
+
+    int subsequence[] = {1, 2, 3};
+    cout << "Print subsequences: ";
+    print_subsequences(subsequence, 3);
+    cout << endl;
 
     return 0;
 }
