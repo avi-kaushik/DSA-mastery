@@ -85,6 +85,14 @@ notes/
 | 008 | The Permutations Pattern (Fix a Position, Swap, Undo) | [008-permutations-pattern.md](005-recursion/008-permutations-pattern.md) |
 | 009 | Recursion on Arrays | [009-recursion-on-arrays.md](005-recursion/009-recursion-on-arrays.md) |
 
+### 006 — Arrays
+
+| # | Topic | Notes |
+|---|---|---|
+| 001 | Introduction to Arrays: Characteristics & O(1) Random Access | [001-introduction-to-arrays.md](006-arrays/001-introduction-to-arrays.md) |
+| 002 | Basic Array Operations & Their Complexities | [002-array-operations.md](006-arrays/002-array-operations.md) |
+| 003 | Static vs Dynamic Arrays (+ Advantages & Disadvantages) | [003-static-vs-dynamic-arrays.md](006-arrays/003-static-vs-dynamic-arrays.md) |
+
 ---
 
 ## ✍️ Note Formats
