@@ -100,6 +100,43 @@ int remove(int arr[], int value, int size, int capacity)
 }
 
 /**
+ * @brief Searches for the first occurrence of a value in an array
+ *        using linear search.
+ *
+ * Algorithm:
+ * 1. Traverse the array from the first to the last element.
+ * 2. Compare each element with the target value.
+ * 3. If a match is found, return its index immediately.
+ * 4. If no match is found, return -1.
+ *
+ * @param arr    The array in which the value is searched.
+ * @param value  The target value to search for.
+ * @param size   The current number of elements in the array.
+ *
+ * @return The zero-based index of the first occurrence,
+ *         or -1 if the value is not found.
+ *
+ * @note Works on both sorted and unsorted arrays.
+ *       Does not modify the original array.
+ *       If duplicates exist, returns the first occurrence.
+ *
+ * Time Complexity:
+ * - Best:    O(1) - Target found at the first index.
+ * - Average: O(n) - Target found around the middle.
+ * - Worst:   O(n) - Target at the end or not found.
+ *
+ * Auxiliary Space: O(1)
+ */
+int search(const int arr[], int value, int size)
+{
+    for (int i = 0; i < size; i++)
+        if (arr[i] == value)
+            return i;
+
+    return -1;
+}
+
+/**
  * @brief Prints the logically occupied elements of an array.
  *
  * @param arr   The array to print.
@@ -141,6 +178,9 @@ int main()
 
     // Print the final array.
     print(arr, size);
+
+    // Search the array element.
+    cout << "The index of 9 is: " << search(arr, 9, size) << endl;
 
     return 0;
 }
