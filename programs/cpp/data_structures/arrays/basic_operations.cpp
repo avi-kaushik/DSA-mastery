@@ -137,6 +137,101 @@ int search(const int arr[], int value, int size)
 }
 
 /**
+ * @brief Checks whether an array is sorted in non-decreasing
+ *        (ascending) order using a single linear traversal.
+ *
+ * Algorithm:
+ * 1. Validate that the array contains at least one element.
+ * 2. Traverse the array from index 1 to size - 1.
+ * 3. Compare each element with its preceding element.
+ * 4. If the current element is smaller than the preceding element,
+ *    return false immediately, as the order is violated.
+ * 5. If no ordering violation is found, return true.
+ *
+ * @param arr   The array to check for sorted order.
+ * @param size  The current number of elements in the array.
+ *
+ * @return true if the array is sorted in non-decreasing order,
+ *         false otherwise.
+ *
+ * @throws std::out_of_range If size is zero or negative.
+ *
+ * @note Checks for non-decreasing order, allowing duplicate values.
+ *       For strictly increasing order, use <= instead of <.
+ *       Handles negative numbers and single-element arrays.
+ *       Does not modify the original array.
+ *       Requires a valid array containing at least size elements.
+ *
+ * Time Complexity:
+ * - Best:  O(1) - First adjacent pair violates the order.
+ * - Worst: O(n) - All adjacent elements must be checked.
+ *
+ * Auxiliary Space: O(1)
+ */
+bool is_sorted(const int arr[], int size)
+{
+    if (size <= 0)
+        throw out_of_range("Array must contain at least one element.");
+
+    for (int i = 1; i < size; i++)
+        if (arr[i] < arr[i - 1])
+            return false;
+
+    return true;
+}
+
+/**
+ * @brief Reverses an array in-place using the two-pointer technique.
+ *
+ * Algorithm:
+ * 1. Validate that the array size is not negative.
+ * 2. Initialize two pointers:
+ *    - left at the first index (0).
+ *    - right at the last index (size - 1).
+ * 3. While the left pointer is smaller than the right pointer:
+ *    - Swap the elements at the left and right indices.
+ *    - Increment the left pointer.
+ *    - Decrement the right pointer.
+ * 4. Stop when the pointers meet or cross.
+ *
+ * @param arr   The array to reverse.
+ * @param size  The current number of elements in the array.
+ *
+ * @return void Modifies the original array directly.
+ *
+ * @throws std::out_of_range If size is negative.
+ *
+ * @note Uses the two-pointer technique.
+ *       Reverses the array in-place without additional storage.
+ *       Handles even-sized, odd-sized, and single-element arrays.
+ *       An empty array remains unchanged.
+ *       Requires a valid array containing at least size elements.
+ *
+ * Time Complexity:
+ * - Best:  O(1) - Array contains zero or one element.
+ * - Worst: O(n) - Approximately n/2 swaps are performed.
+ *
+ * Auxiliary Space: O(1)
+ */
+void reverse(int arr[], int size)
+{
+    if (size < 0)
+        throw out_of_range("Invalid array size.");
+
+    int left = 0, right = size - 1;
+
+    while (left < right)
+    {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
+
+        left++;
+        right--;
+    }
+}
+
+/**
  * @brief Prints the logically occupied elements of an array.
  *
  * @param arr   The array to print.
@@ -171,6 +266,7 @@ int main()
     size = insert(arr, 9, 2, size, array_capacity);
     size = insert(arr, 18, 3, size, array_capacity);
     size = insert(arr, 14, 4, size, array_capacity);
+    size = insert(arr, 18, 5, size, array_capacity);
 
     // Remove elements.
     size = remove(arr, 12, size, array_capacity);
@@ -181,6 +277,12 @@ int main()
 
     // Search the array element.
     cout << "The index of 9 is: " << search(arr, 9, size) << endl;
+
+    // Reverse the array.
+    reverse(arr, size);
+
+    // Print the final array.
+    print(arr, size);
 
     return 0;
 }
