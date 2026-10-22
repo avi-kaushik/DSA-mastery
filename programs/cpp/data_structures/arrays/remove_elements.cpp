@@ -62,6 +62,86 @@ int remove_duplicates(int arr[], int size)
 }
 
 /**
+ * @brief Removes excess duplicate elements from a sorted array
+ *        in-place, retaining at most K occurrences of each
+ *        distinct value using the read/write two-pointer technique.
+ *
+ * Algorithm:
+ * 1. Validate that the array size and occurrence limit are
+ *    non-negative.
+ * 2. If the array is empty or the occurrence limit is zero,
+ *    return 0.
+ * 3. Initialize a write pointer at index 1, retaining the first
+ *    element, and an occurrence counter to 1.
+ * 4. Traverse the array using a read pointer from index 1
+ *    to size - 1.
+ * 5. For each element:
+ *    - If it equals the previous element, increment the
+ *      occurrence counter.
+ *    - Otherwise, reset the occurrence counter to 1.
+ *    - If the occurrence count does not exceed the limit,
+ *      copy the element to the write position and advance
+ *      the write pointer.
+ * 6. Return the write pointer as the updated logical array size.
+ *
+ * @param arr               The sorted array to modify.
+ * @param size              The current number of elements.
+ * @param occurrence_limit  Maximum allowed occurrences of each
+ *                          distinct value.
+ *
+ * @return The updated logical size containing at most K
+ *         occurrences of each distinct element.
+ *
+ * @throws std::out_of_range If size or occurrence_limit is negative.
+ *
+ * @note Requires the input array to be sorted in non-decreasing order.
+ *       Works for any non-negative occurrence limit, including zero.
+ *       Modifies the original array while preserving relative order.
+ *       Handles empty, single-element, and all-duplicate arrays.
+ *       Elements beyond the returned logical size are irrelevant.
+ *       Requires a valid array containing at least size elements.
+ *
+ * Time Complexity:
+ * - Best:  O(1) - Array is empty or occurrence limit is zero.
+ * - Worst: O(n) - Every element is examined once.
+ *
+ * Auxiliary Space: O(1)
+ */
+int remove_duplicates_at_most_k(int arr[], int size, int occurrence_limit)
+{
+    if (size < 0 || occurrence_limit < 0)
+        throw out_of_range("Array size and occurrence limit must be non-negative.");
+
+    // No elements can be retained if the array is empty or K is zero.
+    if (size == 0 || occurrence_limit == 0)
+        return 0;
+
+    // The first element is retained.
+    // pointer tracks the next available write position.
+    int pointer = 1, occurrence_counter = 1;
+
+    // Traverse the original elements to count consecutive occurrences.
+    for (int i = 1; i < size; i++)
+    {
+        // Sorted elements with equal values appear consecutively.
+        if (arr[i] == arr[i - 1])
+            occurrence_counter++;
+        else
+            occurrence_counter = 1;
+
+        // Retain only the first K occurrences of each distinct value.
+        if (occurrence_counter <= occurrence_limit)
+        {
+            arr[pointer] = arr[i];
+            pointer++;
+        }
+    }
+
+    // The write pointer equals the total number of retained elements.
+    return pointer;
+}
+
+/**
  * @brief Removes all occurrences of a specified value from an array
  *        in-place using the read/write two-pointer technique.
  *
@@ -133,6 +213,17 @@ int main()
     cout << "Array with removed 20: ";
     size = remove_values(arr, size, 20);
     print_array(arr, size);
+
+    int arr2[] = {10, 10, 10, 20, 20, 30, 30, 30, 30, 40, 40, 40, 40, 40};
+    int size2 = sizeof arr2 / sizeof arr2[0];
+
+    cout << "Updated Array: ";
+    print_array(arr2, size2);
+
+    size2 = remove_duplicates_at_most_k(arr2, size2, 2);
+
+    cout << "Array with at most " << 2 << " elements: ";
+    print_array(arr2, size2);
 
     return 0;
 }
