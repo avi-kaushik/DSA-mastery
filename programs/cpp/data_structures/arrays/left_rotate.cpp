@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <vector>
 #include "../../include/arrays/print.h"
+#include "../../include/arrays/basic_operations.h"
 
 using namespace std;
 
@@ -129,6 +130,67 @@ void left_rotate(int arr[], int size, int rotate)
         arr[i] = temp[i - remaining];
 }
 
+/**
+ * @brief Left-rotates an array by K positions in-place using
+ *        the three-reversal technique.
+ *
+ * Algorithm:
+ * 1. Validate that the array size and rotation count are non-negative.
+ * 2. If the array contains zero or one element, return immediately.
+ * 3. Normalize the rotation count using k = rotate % size.
+ * 4. If k is zero, return because no rotation is required.
+ * 5. Reverse the first k elements of the array.
+ * 6. Reverse the remaining size - k elements.
+ * 7. Reverse the entire array to obtain the final rotated order.
+ *
+ * @param arr     The array to left-rotate.
+ * @param size    The current number of elements in the array.
+ * @param rotate  The number of positions to rotate left.
+ *
+ * @return void Modifies the original array directly.
+ *
+ * @throws std::out_of_range If size or rotate is negative.
+ *
+ * @note Uses the three-reversal technique.
+ *       Performs a circular left rotation by K positions.
+ *       Normalizes rotations greater than or equal to the array size.
+ *       Preserves all elements and their relative cyclic order.
+ *       Modifies the original array without additional storage.
+ *       Works on both sorted and unsorted arrays.
+ *       Handles empty, single-element, and duplicate-filled arrays.
+ *       Requires a valid array containing at least size elements.
+ *
+ * Time Complexity:
+ * - Best:  O(1) - Array size <= 1 or normalized rotation is zero.
+ * - Worst: O(n) - Three reversals process a total of 2n elements.
+ *
+ * Auxiliary Space: O(1)
+ */
+void left_rotate_using_reversal(int arr[], int size, int rotate)
+{
+    if (size < 0 || rotate < 0)
+        throw out_of_range("Array size and rotation count must be non-negative.");
+
+    // Empty and single-element arrays remain unchanged.
+    if (size <= 1)
+        return;
+
+    // Normalize rotations to eliminate unnecessary full cycles.
+    int k = rotate % size;
+
+    if (k == 0)
+        return;
+
+    // Reverse the first k elements.
+    reverse(arr, k);
+
+    // Reverse the remaining size - k elements.
+    reverse(arr, size, k);
+
+    // Reverse the entire array to restore cyclic order.
+    reverse(arr, size);
+}
+
 int main()
 {
     int arr[] = {19, 16, 42, 12, 28};
@@ -144,6 +206,10 @@ int main()
 
     left_rotate(arr, size, 2);
     cout << "Array after Left-rotate by 2: ";
+    print_array(arr, size);
+
+    left_rotate(arr, size, 2);
+    cout << "Array after Left-rotate by 2 (using reversal method): ";
     print_array(arr, size);
 
     return 0;
