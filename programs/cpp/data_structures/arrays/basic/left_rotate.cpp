@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
-#include "../../include/arrays/print.h"
+#include "../../../include/arrays/print.h"
 #include "../../include/arrays/basic_operations.h"
 
 using namespace std;

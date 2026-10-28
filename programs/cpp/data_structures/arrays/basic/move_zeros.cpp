@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <stdexcept>
-#include "../../include/arrays/print.h"
+#include "../../../include/arrays/print.h"
 
 using namespace std;
 
