@@ -83,6 +83,98 @@ int get_maximum_sum(const int arr[], int size)
 }
 
 /**
+ * @brief Finds the maximum circular subarray sum using Kadane's Algorithm.
+ *
+ * @details
+ * Uses a space-optimized Dynamic Programming approach to calculate the
+ * maximum sum of a non-empty contiguous subarray in a circular array.
+ *
+ * A circular subarray can be:
+ * - Non-wrapping: Found using standard Kadane's Algorithm.
+ * - Wrapping: Calculated by subtracting the minimum subarray sum
+ *   from the total array sum.
+ *
+ * Algorithm (Extended Kadane's Algorithm):
+ * 1. Validate the array size and handle an empty array.
+ * 2. Initialize the total sum, maximum and minimum subarray sums,
+ *    and their respective current sums with the first element.
+ * 3. Traverse the array from index 1 to size - 1.
+ * 4. For each element:
+ *    - Update the maximum subarray sum using Kadane's Algorithm.
+ *    - Update the minimum subarray sum using modified Kadane's Algorithm.
+ *    - Add the current element to the total sum.
+ * 5. If the maximum subarray sum is negative, return it to avoid
+ *    selecting an empty subarray.
+ * 6. Return the maximum of the non-wrapping and wrapping sums.
+ *
+ * @param arr  The input array containing positive, negative, or zero values.
+ * @param size The number of elements in the array.
+ *
+ * @return The maximum sum of any non-empty circular contiguous subarray.
+ *         Returns 0 if the array is empty.
+ *
+ * @throws std::out_of_range If size is negative.
+ *
+ * @note A circular subarray may wrap from the last index to the first,
+ *       but cannot contain more than size elements.
+ *       Handles all-negative and single-element arrays.
+ *       Does not modify the original array.
+ *       Requires a valid array containing at least size elements.
+ *       Assumes intermediate sums fit within the range of int.
+ *
+ * @par Key Observation:
+ *      Maximum Circular Sum =
+ *          max(Maximum Subarray Sum, Total Sum - Minimum Subarray Sum)
+ *
+ *      Subtracting the minimum contiguous subarray from the total
+ *      produces the maximum possible wrapping sum.
+ *
+ *      The all-negative case is handled separately because removing
+ *      the entire array would produce an invalid empty subarray.
+ *
+ * @par Time Complexity:
+ *      Best:  O(1) - Empty array.
+ *      Worst: O(n) - Single linear traversal.
+ *
+ * @par Auxiliary Space:
+ *      O(1) - Uses a constant number of variables.
+ */
+int get_maximum_circular_sum(const int arr[], int size)
+{
+    if (size < 0)
+        throw out_of_range("Invalid array size.");
+
+    // An empty array has no non-empty subarray.
+    if (size == 0)
+        return 0;
+
+    int total = arr[0];
+    int maximum = arr[0], current_maximum = arr[0];
+    int minimum = arr[0], current_minimum = arr[0];
+
+    for (int i = 1; i < size; i++)
+    {
+        // Standard Kadane's: Find the maximum non-wrapping subarray sum.
+        current_maximum = max(arr[i], arr[i] + current_maximum);
+        maximum = max(maximum, current_maximum);
+
+        // Modified Kadane's: Find the minimum subarray sum to exclude.
+        current_minimum = min(arr[i], arr[i] + current_minimum);
+        minimum = min(minimum, current_minimum);
+
+        // Maintain the total sum for calculating the wrapping subarray.
+        total += arr[i];
+    }
+
+    // Prevent selecting an empty subarray when all elements are negative.
+    if (maximum < 0)
+        return maximum;
+
+    // Select the best non-wrapping or wrapping subarray sum.
+    return max(maximum, total - minimum);
+}
+
+/**
  * @brief Finds the length of the longest contiguous subarray with
  *        alternating even and odd elements.
  *
@@ -152,6 +244,9 @@ int main()
 
     cout << "Maximum subarray sum in the given array is: "
          << get_maximum_sum(arr, size) << endl;
+
+    cout << "Maximum circular subarray sum in the given array is: "
+         << get_maximum_circular_sum(arr, size) << endl;
 
     cout << "Maximum length of consecutive even odd sub-array is: "
          << get_maximum_even_odd_length(arr, size) << endl;
