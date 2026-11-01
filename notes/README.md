@@ -92,6 +92,14 @@ notes/
 | 001 | Introduction to Arrays: Characteristics & O(1) Random Access | [001-introduction-to-arrays.md](006-arrays/001-introduction-to-arrays.md) |
 | 002 | Basic Array Operations & Their Complexities | [002-array-operations.md](006-arrays/002-array-operations.md) |
 | 003 | Static vs Dynamic Arrays (+ Advantages & Disadvantages) | [003-static-vs-dynamic-arrays.md](006-arrays/003-static-vs-dynamic-arrays.md) |
+| 004 | Single-Pass Scans: Largest, Second Largest, Is Sorted | [004-single-pass-scans.md](006-arrays/004-single-pass-scans.md) |
+| 005 | Two Pointers: Reverse, Remove Duplicates, Move Zeros | [005-two-pointers.md](006-arrays/005-two-pointers.md) |
+| 006 | Array Rotation: By One, By K & the Reversal Trick | [006-array-rotation.md](006-arrays/006-array-rotation.md) |
+| 007 | Running Extremes: Leaders & Maximum Difference | [007-running-extremes.md](006-arrays/007-running-extremes.md) |
+| 008 | Counting Runs: Frequencies & Max Consecutive Ones | [008-counting-runs.md](006-arrays/008-counting-runs.md) |
+| 009 | Greedy Algorithms & Stock Buy and Sell | [009-greedy-and-stock-buy-sell.md](006-arrays/009-greedy-and-stock-buy-sell.md) |
+| 010 | Trapping Rain Water | [010-trapping-rain-water.md](006-arrays/010-trapping-rain-water.md) |
+| 011 | Kadane's Algorithm: Maximum Subarray Sum | [011-kadanes-algorithm.md](006-arrays/011-kadanes-algorithm.md) |
 
 ---
 
