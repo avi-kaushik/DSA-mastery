@@ -51,32 +51,6 @@ using namespace std;
  *       Does not modify the original array.
  *       Assumes all intermediate sums fit within the range of int.
  *
- * @par Dynamic Programming Recurrence:
- *      Let dp[i] represent the maximum sum of a non-empty contiguous
- *      subarray ending exactly at index i.
- *
- *      dp[i] = max(arr[i], dp[i - 1] + arr[i])
- *
- *      The final answer is the maximum value among all dp[i].
- *
- *      Since only dp[i - 1] is required to calculate dp[i],
- *      the algorithm uses a single variable instead of a DP array.
- *
- * @par Key Observation:
- *      At every index, the maximum-sum subarray ending at that index
- *      must either start at the current element or extend the best
- *      subarray ending at the previous index.
- *
- *      Extending a negative-sum prefix cannot improve the result
- *      compared with starting a new subarray at the current element.
- *
- * @par Loop Invariant:
- *      After processing index i:
- *      - current stores the maximum sum of any non-empty contiguous
- *        subarray ending exactly at index i.
- *      - sum stores the maximum sum of any non-empty contiguous
- *        subarray within the processed prefix arr[0...i].
- *
  * @par Time Complexity:
  *      Best:  O(1) - The array is empty.
  *      Worst: O(n) - Every element is examined once.
@@ -108,6 +82,66 @@ int get_maximum_sum(const int arr[], int size)
     return sum;
 }
 
+/**
+ * @brief Finds the length of the longest contiguous subarray with
+ *        alternating even and odd elements.
+ *
+ * Algorithm (Consecutive Counting + Running Maximum):
+ * 1. Validate the array size and handle an empty array.
+ * 2. Initialize the current and maximum lengths to 1.
+ * 3. Traverse the array, comparing the parity of adjacent elements.
+ * 4. If their parity differs, extend the current subarray.
+ *    Otherwise, reset its length to 1.
+ * 5. Update the maximum length after each iteration.
+ * 6. Return the maximum length found.
+ *
+ * @param arr  The input array containing integer elements.
+ * @param size The number of elements in the array.
+ *
+ * @return Length of the longest alternating even-odd contiguous subarray.
+ *         Returns 0 for an empty array.
+ *
+ * @throws std::out_of_range If size is negative.
+ *
+ * @note Supports positive, negative, and zero values.
+ *       Does not modify the original array.
+ *       Requires a valid array containing at least size elements.
+ *
+ * @par Time Complexity:
+ *      Best:  O(1) - Empty or single-element array.
+ *      Worst: O(n) - Single linear traversal.
+ *
+ * @par Auxiliary Space:
+ *      O(1) - Uses a constant number of variables.
+ */
+int get_maximum_even_odd_length(const int arr[], int size)
+{
+    if (size < 0)
+        throw out_of_range("Invalid array size.");
+
+    // An empty array has no non-empty subarray.
+    if (size == 0)
+        return 0;
+
+    int maximum = 1, current = 1;
+
+    for (int i = 1; i < size; i++)
+    {
+        // Check whether adjacent elements have opposite parity.
+        bool is_alternating = (arr[i] % 2 == 0) != (arr[i - 1] % 2 == 0);
+
+        if (is_alternating)
+            current++;
+        else
+            current = 1; // Start a new subarray at the current element.
+
+        // Track the longest alternating subarray encountered.
+        maximum = max(maximum, current);
+    }
+
+    return maximum;
+}
+
 int main()
 {
     int arr[] = {2, 3, -8, 7, -1, 2, 3};
@@ -118,6 +152,9 @@ int main()
 
     cout << "Maximum subarray sum in the given array is: "
          << get_maximum_sum(arr, size) << endl;
+
+    cout << "Maximum length of consecutive even odd sub-array is: "
+         << get_maximum_even_odd_length(arr, size) << endl;
 
     return 0;
 }
