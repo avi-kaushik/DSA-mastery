@@ -77,6 +77,68 @@ int maximum_sum_of_consecutive_elements(const int arr[], int size, int k)
     return maximum;
 }
 
+/**
+ * @brief Checks whether a non-empty contiguous subarray exists
+ *        with a sum equal to the given target.
+ *
+ * Algorithm (Variable-Size Sliding Window):
+ * 1. Validate the array size and handle an empty array.
+ * 2. Initialize the window boundaries and running sum.
+ * 3. Traverse the array, expanding the window from the right.
+ * 4. While the window sum exceeds the target:
+ *    - Remove the leftmost element from the sum.
+ *    - Advance the starting boundary.
+ * 5. If a non-empty window matches the target, return true.
+ * 6. Return false if no matching subarray is found.
+ *
+ * @param arr  The input array containing non-negative integers.
+ * @param size The number of elements in the array.
+ * @param sum  The target subarray sum.
+ *
+ * @return true if a non-empty contiguous subarray with the
+ *         target sum exists; false otherwise.
+ *
+ * @throws std::out_of_range If size is negative.
+
+ * @par Time Complexity:
+ *      Best:  O(1) - Empty array or an immediate match.
+ *      Worst: O(n) - Each element enters and leaves the window
+ *             at most once.
+ *
+ * @par Auxiliary Space:
+ *      O(1) - Uses a constant number of variables.
+ */
+bool is_sub_array_with_given_sum_present(const int arr[], int size, int sum)
+{
+    if (size < 0)
+        throw out_of_range("Invalid array size.");
+
+    if (size <= 0)
+        return false;
+
+    int start = 0, end = 0, window_sum = 0;
+
+    for (int i = 0; i < size; i++)
+    {
+        // Expand the window by including the current element.
+        window_sum += arr[i];
+        end++;
+
+        // Shrink the window until its sum is within the target.
+        while (window_sum > sum && start < end)
+        {
+            window_sum -= arr[start];
+            start++;
+        }
+
+        // A matching window must contain at least one element.
+        if (start < end && window_sum == sum)
+            return true;
+    }
+
+    return false;
+}
+
 int main()
 {
     int arr[] = {1, 8, 30, -5, 20, 7};
@@ -88,6 +150,11 @@ int main()
 
     cout << "Maximum sum of " << k << " consecutive elements is "
          << maximum_sum_of_consecutive_elements(arr, size, k) << "." << endl;
+
+    int sum = 45;
+
+    cout << "Is sub-array with sum of " << sum << " present? "
+         << (is_sub_array_with_given_sum_present(arr, size, sum) ? "yes" : "no") << endl;
 
     return 0;
 }
