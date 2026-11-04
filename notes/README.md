@@ -96,10 +96,15 @@ notes/
 | 005 | Two Pointers: Reverse, Remove Duplicates, Move Zeros | [005-two-pointers.md](006-arrays/005-two-pointers.md) |
 | 006 | Array Rotation: By One, By K & the Reversal Trick | [006-array-rotation.md](006-arrays/006-array-rotation.md) |
 | 007 | Running Extremes: Leaders & Maximum Difference | [007-running-extremes.md](006-arrays/007-running-extremes.md) |
-| 008 | Counting Runs: Frequencies & Max Consecutive Ones | [008-counting-runs.md](006-arrays/008-counting-runs.md) |
+| 008 | Counting Runs: Frequencies, Max Consecutive Ones & Even-Odd Subarray | [008-counting-runs.md](006-arrays/008-counting-runs.md) |
 | 009 | Greedy Algorithms & Stock Buy and Sell | [009-greedy-and-stock-buy-sell.md](006-arrays/009-greedy-and-stock-buy-sell.md) |
 | 010 | Trapping Rain Water | [010-trapping-rain-water.md](006-arrays/010-trapping-rain-water.md) |
-| 011 | Kadane's Algorithm: Maximum Subarray Sum | [011-kadanes-algorithm.md](006-arrays/011-kadanes-algorithm.md) |
+| 011 | Kadane's Algorithm: Maximum Subarray Sum (+ Circular) | [011-kadanes-algorithm.md](006-arrays/011-kadanes-algorithm.md) |
+| 012 | Majority Element: Boyer–Moore Majority Vote | [012-majority-element.md](006-arrays/012-majority-element.md) |
+| 013 | Minimum Consecutive Flips (Minimum Group Flips) | [013-minimum-group-flips.md](006-arrays/013-minimum-group-flips.md) |
+| 014 | Sliding Window: Max Sum of K Elements & Subarray with Given Sum | [014-sliding-window.md](006-arrays/014-sliding-window.md) |
+| 015 | Prefix Sum: Range Sum Queries & Equilibrium Point | [015-prefix-sum.md](006-arrays/015-prefix-sum.md) |
+| 016 | Difference Array: Maximum Appearing Element in Ranges | [016-difference-array.md](006-arrays/016-difference-array.md) |
 
 ---
 

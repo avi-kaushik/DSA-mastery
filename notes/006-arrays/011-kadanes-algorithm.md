@@ -1,4 +1,4 @@
-# 011 — Kadane's Algorithm: Maximum Subarray Sum
+# 011 — Kadane's Algorithm: Maximum Subarray Sum (+ Circular)
 
 > **One-line takeaway:** At every index ask one question — *"Is the best subarray ending just before me worth carrying, or should I start fresh here?"* If the running sum has gone negative, it can only drag you down, so **drop it**. One pass, `O(n)` time, `O(1)` space.
 
@@ -221,30 +221,93 @@ for (int i = 1; i < size; i++) {
 }
 ```
 
-### Maximum circular subarray sum
+### ⭐ Maximum circular subarray sum (implemented)
 
-The best subarray either doesn't wrap (plain Kadane) or **wraps around** the end. A
-wrapping subarray is everything **except** some middle block — so maximise it by removing
-the **minimum** subarray:
+📄 [`sub_array.cpp`](../../programs/cpp/data_structures/arrays/intermediate/sub_array.cpp) (`get_maximum_circular_sum`)
+
+**Problem:** the array is a ring — the last element is followed by the first. Find the
+maximum subarray sum, where a subarray may **wrap around** the end.
 
 ```text
-answer = max( kadane_max,  total − kadane_min )
-exception: if every element is negative, total − kadane_min = 0 (empty) → return kadane_max
+[5, −3, 5]   →  10      (5 + 5, wrapping: index 2 → index 0)
 ```
+
+**Naive:** start at every index, walk `n` steps with `(i + j) % n`, keep a running sum →
+`O(n²)`.
+
+**💡 Insight — the best subarray either wraps, or it doesn't.**
+
+```text
+doesn't wrap   →  plain Kadane                                      (case 1)
+
+wraps          →  [ a a a | m m m m | b b b ]
+                    └─────┘           └─────┘   the subarray = b b b + a a a
+                            └───────┘           what's LEFT OUT is a middle block
+
+                  wrap sum = total − middle sum
+                  maximise the wrap  ⇔  MINIMISE the middle             (case 2)
+```
+
+> 🔑 **A wrapping subarray is the complement of a non-wrapping one.** So run Kadane twice
+> in the same loop — once for the max, once (with `min`) for the min — and take
+> `max(kadane_max, total − kadane_min)`.
+
+**💻 Code**
 
 ```cpp
-int total = 0, cur_max = 0, best_max = arr[0], cur_min = 0, best_min = arr[0];
-for (int i = 0; i < size; i++) {
-    cur_max = max(arr[i], cur_max + arr[i]);  best_max = max(best_max, cur_max);
-    cur_min = min(arr[i], cur_min + arr[i]);  best_min = min(best_min, cur_min);
-    total  += arr[i];
+int get_maximum_circular_sum(const int arr[], int size)
+{
+    if (size == 0) return 0;
+
+    int total = arr[0];
+    int maximum = arr[0], current_maximum = arr[0];
+    int minimum = arr[0], current_minimum = arr[0];
+
+    for (int i = 1; i < size; i++)
+    {
+        current_maximum = max(arr[i], arr[i] + current_maximum);   // standard Kadane
+        maximum = max(maximum, current_maximum);
+
+        current_minimum = min(arr[i], arr[i] + current_minimum);   // Kadane, mirrored
+        minimum = min(minimum, current_minimum);
+
+        total += arr[i];
+    }
+
+    if (maximum < 0) return maximum;          // all negative → see below
+    return max(maximum, total - minimum);     // best of "no wrap" and "wrap"
 }
-return best_max < 0 ? best_max : max(best_max, total - best_min);
 ```
 
+**🔍 Trace — `[2, 3, −8, 7, −1, 2, 3]`** (the repo's demo array)
+
 ```text
-[5, −3, 5]   kadane = 7,  total = 7,  min = −3   →  max(7, 7 − (−3)) = 10   (5 + 5, wrapping)
+kadane max   = 11      (7 − 1 + 2 + 3)
+kadane min   = −8      (just −8)
+total        = 8
+wrap         = 8 − (−8) = 16      (7 − 1 + 2 + 3 + 2 + 3, wrapping past the end)
+answer       = max(11, 16) = 16
 ```
+
+**The all-negative exception**
+
+```text
+[−3, −1, −2]     kadane max = −1      min = −6 (the whole array)     total = −6
+                 total − min = 0   ← "leave out everything" = the EMPTY subarray ❌
+```
+
+When every element is negative, the minimum subarray is the whole array, and the "wrap"
+becomes empty — not allowed. `maximum < 0` happens exactly when every element is negative,
+so return plain Kadane then. (If `maximum >= 0`, a `0` from the empty case can never beat
+it, so no other guard is needed.)
+
+**⏱️ Complexity:** one pass → `O(n)` time, `O(1)` space.
+
+| ⚠️ Pitfall | Result |
+|---|---|
+| Missing the `maximum < 0` check | All-negative arrays return `0` |
+| Computing `total − minimum` only | Misses the non-wrapping case (`[−2, 5, −2]` → wrap gives `3`, answer is `5`) |
+| Brute force with `(i + j) % n` | Correct but `O(n²)` |
 
 ### Maximum product subarray
 

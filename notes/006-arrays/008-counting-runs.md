@@ -1,9 +1,10 @@
-# 008 — Counting Runs: Frequencies in a Sorted Array & Max Consecutive Ones
+# 008 — Counting Runs: Frequencies, Max Consecutive Ones & Longest Even-Odd Subarray
 
-> **One-line takeaway:** A **run** is a stretch of consecutive elements that belong together — equal values, or all `1`s. Count while the run continues, act when it **breaks**, and never forget the run that's still open when the loop ends. That last run is where almost every bug in this family hides.
+> **One-line takeaway:** A **run** is a stretch of consecutive elements that belong together — equal values, all `1`s, or alternating parity. Count while the run continues, act when it **breaks**, and never forget the run that's still open when the loop ends. That last run is where almost every bug in this family hides.
 
 📄 [`frequencies.cpp`](../../programs/cpp/data_structures/arrays/basic/frequencies.cpp) ·
-📄 [`maximum_consecutive_ones.cpp`](../../programs/cpp/data_structures/arrays/basic/maximum_consecutive_ones.cpp)
+📄 [`maximum_consecutive_ones.cpp`](../../programs/cpp/data_structures/arrays/basic/maximum_consecutive_ones.cpp) ·
+📄 [`sub_array.cpp`](../../programs/cpp/data_structures/arrays/intermediate/sub_array.cpp)
 
 ---
 
@@ -204,7 +205,7 @@ else { maximum = max(maximum, current); current = 0; }
 |---|---|
 | Longest run if you may flip up to `k` zeros | **Sliding window** (below) |
 | Longest run of **any** equal value | Same template, condition `arr[i] == arr[i − 1]` |
-| Longest alternating even/odd subarray | Same template, condition "parity differs from previous" (📄 [`LongestEvenOddSubArray.java`](../../programs/java/arrays/basic/LongestEvenOddSubArray.java)) |
+| Longest alternating even/odd subarray | Same template, condition "parity differs from previous" → **Card 3** |
 | Count of runs of ones | Count the `0 → 1` transitions |
 
 ### The `k`-flips follow-up — run counting grows into a sliding window
@@ -226,6 +227,110 @@ for (int right = 0; right < size; right++) {
 k = 0 gives exactly maximum consecutive ones.
 Each index enters and leaves the window once → O(n).
 ```
+
+The full technique — fixed and variable windows — is in [Sliding Window](014-sliding-window.md).
+
+---
+
+# Card 3 — Longest Alternating Even-Odd Subarray
+
+**Run template, style B — on pairs** · 📄 [`sub_array.cpp`](../../programs/cpp/data_structures/arrays/intermediate/sub_array.cpp) (`get_maximum_even_odd_length`)
+
+### 🎯 Problem
+
+Find the length of the longest **subarray** in which every pair of neighbours has
+**opposite parity** (even, odd, even, … or odd, even, odd, …).
+
+```text
+[5, 10, 20, 6, 3, 8]      →  3      (6, 3, 8)
+[2, 3, −8, 7, −1, 2, 3]   →  4      (2, 3, −8, 7)
+[7, 9, 11]                →  1      (any single element qualifies)
+```
+
+### The naive version
+
+```cpp
+for (int i = 0; i < size; i++) {          // every start
+    int len = 1;
+    for (int j = i + 1; j < size && (arr[j] % 2 == 0) != (arr[j - 1] % 2 == 0); j++)
+        len++;
+    best = max(best, len);
+}
+```
+
+`O(n²)` — and every run is re-walked from each of its starting points.
+
+### 💡 Insight
+
+> **It's a run, but the condition is about a _pair_, not a value.** "Does `arr[i]` continue
+> the run?" means "does its parity differ from `arr[i − 1]`'s?". Same template as Card 2:
+> extend on yes, reset to `1` on no, update the best every step.
+
+A run that breaks at `i` can't be rescued by starting anywhere inside it — every later
+start would hit the same broken pair at `i`. So restarting **at `i`** is never wrong.
+
+### 💻 Code
+
+```cpp
+int get_maximum_even_odd_length(const int arr[], int size)
+{
+    if (size == 0) return 0;
+
+    int maximum = 1, current = 1;                 // a single element is a valid run
+    for (int i = 1; i < size; i++)
+    {
+        bool is_alternating = (arr[i] % 2 == 0) != (arr[i - 1] % 2 == 0);
+
+        if (is_alternating) current++;            // pair alternates → extend
+        else                current = 1;          // two same parities → restart AT i
+
+        maximum = max(maximum, current);
+    }
+    return maximum;
+}
+```
+
+> Seeds are `1`, not `0` like Card 2: here every non-empty array has an answer of at least
+> `1`, because a lone element trivially "alternates".
+
+### 🔍 Trace — `[2, 3, −8, 7, −1, 2, 3]`
+
+```text
+i   pair        parities   alternates?   current   maximum
+1   2, 3        E O            ✓            2         2
+2   3, −8       O E            ✓            3         3
+3   −8, 7       E O            ✓            4         4
+4   7, −1       O O            ✗            1         4      ← restart at −1
+5   −1, 2       O E            ✓            2         4
+6   2, 3        E O            ✓            3         4
+answer → 4   (2, 3, −8, 7)
+```
+
+### ⚠️ The negative-number trap
+
+```text
+C++ and Java:   −1 % 2  ==  −1        (the sign follows the dividend)
+
+arr[i] % 2 == 1     ❌  says −1 is NOT odd
+arr[i] % 2 == 0     ✅  even test works for negatives
+arr[i] & 1          ✅  1 for odd, 0 for even — negatives included (two's complement)
+```
+
+The repo version tests `% 2 == 0` on both sides, which is why `7, −1` is correctly seen as
+odd, odd. (Bitwise parity: [Bitwise Operators](../004-bitwise-operations/002-bitwise-operators.md).)
+
+### ⏱️ Complexity
+
+`O(n)` time, `O(1)` space.
+
+### 🔀 Variants — same loop, different pair condition
+
+| Problem | "Continues the run" when… |
+|---|---|
+| Longest alternating **sign** subarray | `(arr[i] < 0) != (arr[i − 1] < 0)` |
+| Longest strictly **increasing** subarray | `arr[i] > arr[i − 1]` |
+| Longest subarray of **equal** values | `arr[i] == arr[i − 1]` |
+| Longest **zig-zag** subarray (up, down, up …) | the sign of `arr[i] − arr[i−1]` differs from the previous difference's |
 
 ---
 
@@ -255,6 +360,9 @@ Each index enters and leaves the window once → O(n).
 | **On a break, which element's run ended?** | `arr[i − 1]`, not `arr[i]`. |
 | **Max consecutive ones?** | `+1` on one, reset on zero, `best = max(best, current)` every step. |
 | **With `k` flips allowed?** | Sliding window holding at most `k` zeros. |
+| **Longest even-odd subarray?** | Run template on pairs: extend if parity differs from the previous, else reset to `1`. |
+| **Why seed `1` there but `0` for consecutive ones?** | Any single element alternates; but an array may contain no `1`s at all. |
+| **Parity of negatives?** | `−1 % 2 == −1` in C++/Java — test `% 2 == 0` or `& 1`, never `% 2 == 1`. |
 | **Complexity?** | `O(n)` time, `O(1)` space. |
 
 ---
@@ -272,7 +380,8 @@ Each index enters and leaves the window once → O(n).
                           ┌───────────────┴───────────────┐
                           ↓                               ↓
                  report every group                only the best matters
-                 (frequencies)                     (consecutive ones)
+                 (frequencies)                     (consecutive ones,
+                                                    even-odd: condition on PAIRS)
                  → close last run                  → update every step,
                    AFTER the loop                    nothing left over
                                                           │
