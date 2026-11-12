@@ -1,438 +1,336 @@
-# 005 — Two Pointers: Reverse, Remove Duplicates, Move Zeros
+# 005 — Two Pointers
 
-> **One-line takeaway:** Two indices, two jobs. Either they **walk towards each other** (reverse), or one **reads** every element while the other **writes** only the ones you keep (remove / compact). Both turn "build a new array" into **in-place, `O(1)` space** — and the read/write version turns repeated `O(n)` deletes into a single `O(n)` pass.
-
-📄 [`basic_operations.h`](../../programs/cpp/include/arrays/basic_operations.h) ·
-📄 [`remove_elements.cpp`](../../programs/cpp/data_structures/arrays/basic/remove_elements.cpp) ·
-📄 [`move_zeros.cpp`](../../programs/cpp/data_structures/arrays/basic/move_zeros.cpp)
+> **One-line takeaway:** Two indices, each with a clear **meaning**, that only ever move **forward** (or inward). Because neither pointer goes back, they make at most `2n` moves in total — so a problem that looks like "check every pair" (`O(n²)`) becomes `O(n)`. The trick is never the pointers themselves; it's the **reason you're allowed to move one** without missing anything.
 
 ---
 
-## 1. Why Two Pointers?
+## 1. The Problem This Concept Solves
 
-Take "remove every `20` from `[10, 20, 20, 30, 20]`". Two obvious approaches, both bad:
+Two kinds of pain lead to two pointers.
 
-```text
-A. repeated delete      find a 20, shift the tail left, repeat     O(n) per delete → O(n²)
-B. new array            copy the non-20s into a second array       O(n) time, but O(n) space
-```
+**Pain 1 — checking every pair.**
 
-Two pointers gets the best of both: **one pass** like B, **no extra array** like A.
+> *Is there a pair in a **sorted** array that sums to `T`?*
 
-```text
-C. read / write         read every element, write the keepers      O(n) time, O(1) space ✅
-                        over the front of the SAME array
-```
+The obvious way tries all pairs: `n(n−1)/2` of them → `O(n²)`.
 
-> 💡 The general trick: when you'd naturally build a new array, ask whether you can build
-> it **over the front of the old one**, because you've already finished reading that part.
+**Pain 2 — building a new array when you're not allowed one.**
 
----
+> *Remove every `0` from the array, in place, keeping the order.*
 
-## 2. The Two Shapes
+The obvious ways either delete one element at a time (each delete shifts the tail →
+`O(n²)`), or copy the keepers into a second array (`O(n)` extra space).
 
-```text
-OPPOSITE ENDS  (converging)                SAME DIRECTION  (read / write)
-
- left →             ← right                 write
- [ 1  2  3  4  5 ]                            ↓
-                                            [ 10 20 20 30 30 ]
- meet in the middle                              ↑
-                                                read  (always ahead of, or level with, write)
-```
-
-| | Opposite ends | Read / write (slow / fast) |
-|---|---|---|
-| **Used for** | reverse, palindrome, pair-sum in a sorted array | remove, dedupe, compact, partition |
-| **Moves** | both inward every step | `read` every step, `write` only on keep |
-| **Stops** | `left >= right` | `read` reaches the end |
-| **Returns** | usually nothing (in-place change) or a found pair | the **new logical size** = `write` |
+Two pointers fixes both — `O(n)` time, `O(1)` extra space.
 
 ---
 
-# Card 1 — Reverse an Array (Opposite Ends)
+## 2. The Core Idea — Every Move Must Eliminate Something
 
-**Shape: converging** · 📄 [`basic_operations.h`](../../programs/cpp/include/arrays/basic_operations.h)
+> 🔑 **A pointer may move only when you can prove that the element it's leaving behind is
+> no longer needed.** That proof is the whole algorithm.
 
-### 🎯 Problem
+Picture a sorted bookshelf and two friends looking for two books whose page counts add
+to exactly 500. One starts at the thinnest book, the other at the thickest.
 
-Reverse the elements of `arr[start … size)` in place. By default, the whole array.
+```text
+thin ──────────────────────────────────── thick
+ l →                                    ← r
 
-### 💡 Insight
+sum too small?  the thin book can't work with ANYONE — even the thickest is not enough
+                → the left friend steps right
 
-> **The first and last elements swap places, then the problem is the same thing one step
-> smaller.** Swap the ends, move both pointers inward, stop when they meet.
+sum too big?    the thick book can't work with ANYONE — even the thinnest is too much
+                → the right friend steps left
+```
 
-### 💻 Code
+Every step **retires one book for good**. After at most `n` steps the friends meet, and
+every possible pair has been either checked or ruled out.
+
+---
+
+## 3. The Three Shapes
+
+```text
+1. OPPOSITE ENDS (converging)        2. SAME DIRECTION (read / write)     3. TWO ARRAYS
+                                                                          
+ l →               ← r                write                               i →
+ [ 1  2  3  4  5  6 ]                   ↓                                 [ 1  4  7 ]
+                                      [ 3  0  4  0  5 ]                   j →
+ meet in the middle                      ↑                                [ 2  3  9 ]
+                                        read  (always ≥ write)
+                                                                          advance the smaller
+```
+
+| | Opposite ends | Read / write (slow–fast) | Two arrays |
+|---|---|---|---|
+| **Pointers mean** | the two ends of what's still possible | `read`: next to inspect · `write`: next slot to fill | current position in each array |
+| **Moves** | one or both inward | `read` every step, `write` only on "keep" | the one with the smaller value |
+| **Typical uses** | reverse, palindrome, pair sum in sorted array | remove, dedupe, compact, partition | merge, intersection, union |
+| **Needs** | symmetry, or sortedness to decide which side to drop | a keep/discard rule | both arrays sorted |
+
+---
+
+## 4. Shape 1 — Opposite Ends
+
+### The simplest case: reverse
+
+Swap the two ends, then the problem is the same thing one step smaller.
 
 ```cpp
-inline void reverse(int arr[], int size, int start = 0)     // reverses [start, size)
-{
-    if (size < 0 || start < 0 || start > size)
-        throw std::out_of_range("Invalid reversal range.");
+int l = 0, r = n - 1;
+while (l < r)
+    swap(arr[l++], arr[r--]);
+```
 
-    int left = start, right = size - 1;
-    while (left < right)
-    {
-        int temp = arr[left];          // swap the two ends
-        arr[left] = arr[right];
-        arr[right] = temp;
-        left++;                        // move both inward
-        right--;
-    }
+```text
+[1 2 3 4 5]  →  [5 2 3 4 1]  →  [5 4 3 2 1]      stop: l == r, the middle is already home
+```
+
+`⌊n/2⌋` swaps — each fixes **two** positions. A palindrome check is the same walk with
+"compare" instead of "swap".
+
+### The interesting case: pair sum in a sorted array
+
+```cpp
+int l = 0, r = n - 1;
+while (l < r) {
+    int sum = arr[l] + arr[r];
+    if (sum == T) return true;
+    if (sum < T)  l++;          // arr[l] is too small even with the biggest partner
+    else          r--;          // arr[r] is too big even with the smallest partner
 }
+return false;
 ```
-
-### 🔍 Trace
 
 ```text
-odd length  [1 2 3 4 5]
-  l=0 r=4  swap → [5 2 3 4 1]
-  l=1 r=3  swap → [5 4 3 2 1]
-  l=2 r=2  stop — the middle is already in place                 2 swaps
+[1  3  4  6  8  11],  T = 10          (showing the VALUES under l and r)
 
-even length [1 2 3 4]
-  l=0 r=3  swap → [4 2 3 1]
-  l=1 r=2  swap → [4 3 2 1]
-  l=2 r=1  stop — pointers crossed                               2 swaps
+arr[l]=1  arr[r]=11   sum 12  > 10  → r−−   (11 can't pair with anything: 11 + 1 is already too big)
+arr[l]=1  arr[r]=8    sum  9  < 10  → l++   (1 can't pair with anything: 1 + 8 is the best it gets)
+arr[l]=3  arr[r]=8    sum 11  > 10  → r−−
+arr[l]=3  arr[r]=6    sum  9  < 10  → l++
+arr[l]=4  arr[r]=6    sum 10  ✅
 ```
 
-### ⏱️ Complexity
+### Why it never misses a pair
 
-`⌊n/2⌋` swaps → `O(n)` time, `O(1)` space. Each swap fixes **two** positions.
+> **Invariant:** if a valid pair exists, both of its elements are still inside `[l, r]`.
 
-### ⚠️ Pitfalls
+When `arr[l] + arr[r] < T`, every partner of `arr[l]` inside the window is `≤ arr[r]`, so
+every sum involving `arr[l]` is `< T`. Discarding `l` loses nothing. The `>` case is the
+mirror image. Each step keeps the invariant, so when the pointers meet without a match,
+no pair existed.
 
-- `left < right`, not `<=`: with `<=` the middle element swaps with itself — harmless, but
-  shows you don't know why the loop stops.
-- The range is **half-open** `[start, size)`: `size` is the exclusive end, so the last
-  element touched is `arr[size − 1]`.
-- Looping `i` from `0` to `n` and swapping `arr[i]` with `arr[n−1−i]` reverses **twice** —
-  back to the original. Stop at `n/2`.
+### 🧠 Pause and predict
 
-### 🔀 Variants
+Why does this break on an **unsorted** array?
 
-| Follow-up | Note |
-|---|---|
-| Reverse a **sub-range** | That's what `start` is for — the rotation trick in [note 006](006-array-rotation.md) depends on it |
-| Palindrome check | Same pointers, compare instead of swap; stop at the first mismatch |
-| Pair with a given sum in a **sorted** array | Sum too small → `left++`; too big → `right--` (📄 [`TwoPointerApproachToFindGivenPairSum.java`](../../programs/java/arrays/searching/TwoPointerApproachToFindGivenPairSum.java)) |
-| Library | `std::reverse(a, a + n)` · `Collections.reverse(list)` |
+<details>
+<summary>Answer</summary>
+
+The elimination argument needs "everything between `l` and `r` is `≤ arr[r]`". Without
+sorting, a bigger partner for `arr[l]` might be hiding in the middle, so discarding `l` can
+throw away the answer. Unsorted pair sum uses a **hash set** instead (`O(n)` time, `O(n)`
+space) — or sort first (`O(n log n)`).
+
+</details>
+
+> 💡 **3-Sum** is this idea plus one loop: fix the first element, then run pair-sum on the
+> rest → `O(n²)` instead of `O(n³)`.
 
 ---
 
-## 3. The Read / Write Template ⭐
+## 5. Shape 2 — Read / Write (Compaction)
 
-Every problem in the rest of this note is this loop with a different **keep condition**:
+This is the answer to Pain 2.
+
+> **Don't delete the elements you don't want — copy the ones you do want forward.**
 
 ```cpp
-int write = <first slot to fill>;
-for (int read = <start>; read < size; read++)
-    if (<keep arr[read]?>)
+int write = 0;
+for (int read = 0; read < n; read++)
+    if (keep(arr[read]))
         arr[write++] = arr[read];
-return write;                          // new size; arr[0 … write−1] is the answer
+// arr[0 … write) is the result; write is the new size
 ```
 
-### The invariant — why it's safe to overwrite
+### Why overwriting is safe
+
+> **Invariant:** `write ≤ read`, and `arr[0 … write)` is the answer for `arr[0 … read)`.
+
+`write` never overtakes `read`, so every slot you overwrite has **already been read**.
+Nothing unread is destroyed.
 
 ```text
-at every step:   arr[0 … write)  =  the answer for the elements arr[0 … read)
-and              write <= read
+remove 0s from [3 0 4 0 5]
+
+read  value  keep?   array            write
+ 0      3     ✓     [3 0 4 0 5]         1
+ 1      0     ✗                         1
+ 2      4     ✓     [3 4 4 0 5]         2
+ 3      0     ✗                         2
+ 4      5     ✓     [3 4 5 0 5]         3
+result: first 3 slots → [3 4 5]      (the tail is leftover junk, outside the new size)
 ```
 
-> 🔑 `write` never overtakes `read`, so every slot you overwrite has **already been read**.
-> Nothing unread is ever destroyed. That one fact is what makes in-place compaction legal.
+### One loop, many problems — only the keep rule changes
 
-### What's left after `write`?
-
-```text
-[ 10 20 30 | 30 30 ]       return 3
-  └ answer ┘ └ junk ┘      leftovers from the old array — outside the logical size, ignored
-```
-
-Exactly the capacity/size idea from [note 002](002-array-operations.md): the function
-returns the new size, and the caller must use it.
-
----
-
-# Card 2 — Remove Every Occurrence of a Value
-
-**Shape: read / write** · 📄 [`remove_elements.cpp`](../../programs/cpp/data_structures/arrays/basic/remove_elements.cpp)
-
-### 🎯 Problem
-
-Remove all occurrences of `value` in place; return the new size. Order of the rest must be
-preserved.
-
-### 💡 Insight
-
-> **Don't delete the bad elements — copy the good ones forward.** Deleting shifts the whole
-> tail each time; copying forward touches each element once.
-
-### 💻 Code
-
-```cpp
-int remove_values(int arr[], int size, int value)
-{
-    int pointer = 0;                          // next slot for a kept element
-    for (int i = 0; i < size; i++)
-        if (arr[i] != value)
-            arr[pointer++] = arr[i];
-    return pointer;
-}
-```
-
-### 🔍 Trace — remove `20` from `[10, 20, 20, 30, 20]`
-
-```text
-read  arr[read]  keep?   array after                write
- 0       10       ✓     [10 20 20 30 20]             1
- 1       20       ✗                                  1
- 2       20       ✗                                  1
- 3       30       ✓     [10 30 20 30 20]             2
- 4       20       ✗                                  2
-return 2  →  [10 30]
-```
-
-### ⏱️ Complexity
-
-`O(n)` time, `O(1)` space — versus `O(n²)` for "find and delete" repeatedly.
-
----
-
-# Card 3 — Remove Duplicates from a Sorted Array
-
-### 🎯 Problem
-
-Keep one copy of each value in a **sorted** array; return the number of distinct values.
-
-### 💡 Insight
-
-> **In a sorted array, equal values are adjacent.** "Is this a duplicate?" becomes "is it
-> equal to its left neighbour?" — an `O(1)` check, no set required.
-
-### 💻 Code
-
-```cpp
-int remove_duplicates(int arr[], int size)
-{
-    if (size <= 1) return size;               // 0 or 1 element: already unique
-
-    int pointer = 1;                          // arr[0] is always kept
-    for (int i = 1; i < size; i++)
-        if (arr[i] != arr[i - 1])             // first of a new value
-            arr[pointer++] = arr[i];
-    return pointer;
-}
-```
-
-### 🔍 Trace — `[10, 20, 20, 30, 30]`
-
-```text
-read  arr[read]  arr[read−1]  new value?   array after          write
- 1       20          10           ✓        [10 20 20 30 30]       2
- 2       20          20           ✗                               2
- 3       30          20           ✓        [10 20 30 30 30]       3
- 4       30          30           ✗                               3
-return 3  →  [10 20 30]
-```
-
-> 💡 Reading `arr[i − 1]` is safe even though the front is being rewritten: `i − 1 >=
-> pointer − 1`, so that slot is either untouched or was just rewritten **with the same
-> value**.
-
-### ⚠️ Pitfalls
-
-- **Unsorted input** — non-adjacent duplicates survive. Use a hash set instead (`O(n)` time,
-  `O(n)` space), or sort first (`O(n log n)`).
-- Starting at `pointer = 1` without the `size <= 1` guard returns `1` for an empty array.
-
----
-
-# Card 4 — Keep At Most `k` Copies of Each Value
-
-### 🎯 Problem
-
-In a sorted array, keep at most `k` occurrences of every value. (`k = 1` is Card 3.)
-
-### 💡 Insight
-
-> **Count the length of the current run.** Reset to 1 on a new value, keep while the count
-> is `<= k`.
-
-### 💻 Code
-
-```cpp
-int remove_duplicates_at_most_k(int arr[], int size, int occurrence_limit)
-{
-    if (size == 0 || occurrence_limit == 0) return 0;
-
-    int pointer = 1, occurrence_counter = 1;
-    for (int i = 1; i < size; i++)
-    {
-        if (arr[i] == arr[i - 1]) occurrence_counter++;   // run continues
-        else                      occurrence_counter = 1; // new value
-
-        if (occurrence_counter <= occurrence_limit)
-            arr[pointer++] = arr[i];
-    }
-    return pointer;
-}
-```
-
-### 🔍 Trace — `k = 2`, `[10, 10, 10, 20, 30, 30, 30]`
-
-```text
-read  value  run  keep?    write
- 1     10     2     ✓        2
- 2     10     3     ✗        2
- 3     20     1     ✓        3
- 4     30     1     ✓        4
- 5     30     2     ✓        5
- 6     30     3     ✗        5
-return 5  →  [10 10 20 30 30]
-```
-
-### The counter-free alternative
-
-```cpp
-int write = 0;
-for (int read = 0; read < size; read++)
-    if (write < k || arr[read] != arr[write - k])     // "the element k places back
-        arr[write++] = arr[read];                      //  in the OUTPUT isn't me"
-```
-
-If the output already has `k` copies of this value, they'd fill `arr[write−k … write−1]` —
-so `arr[write − k]` would equal it. Elegant, but the counter version is easier to explain.
-
----
-
-# Card 5 — Move Zeros to the End
-
-📄 [`move_zeros.cpp`](../../programs/cpp/data_structures/arrays/basic/move_zeros.cpp)
-
-### 🎯 Problem
-
-Move every `0` to the end, keeping the **relative order** of the non-zero elements.
-
-### 💡 Insight
-
-> **It's "remove all zeros", followed by refilling the tail with zeros.** The count of zeros
-> is simply `size − write`.
-
-### 💻 Code — two phases (implemented)
-
-```cpp
-void move_zeros(int arr[], int size)
-{
-    int pointer = 0;
-    for (int i = 0; i < size; i++)          // phase 1: compact non-zeros (Card 2 with value 0)
-        if (arr[i] != 0)
-            arr[pointer++] = arr[i];
-
-    for (int i = pointer; i < size; i++)    // phase 2: fill the rest with zeros
-        arr[i] = 0;
-}
-```
-
-### 🔍 Trace — `[10, 0, 20, 0, 30]`
-
-```text
-phase 1    [10 20 30 | 0 30]      write = 3    (tail is leftover junk)
-phase 2    [10 20 30   0  0]
-```
-
-### One-phase alternative — swap instead of copy
-
-```cpp
-int write = 0;
-for (int read = 0; read < size; read++)
-    if (arr[read] != 0)
-        swap(arr[write++], arr[read]);      // zeros drift right as non-zeros jump left
-```
-
-```text
-[10 0 20 0 30]
-read 0: swap(0,0)   [10 0 20 0 30]   w=1
-read 2: swap(1,2)   [10 20 0 0 30]   w=2
-read 4: swap(2,4)   [10 20 30 0 0]   w=3
-```
-
-| | Two-phase | Swap |
+| Problem | Keep `arr[read]` when… | Extra |
 |---|---|---|
-| Passes | 2 | 1 |
-| Writes | exactly `n` | 2 per non-zero (including pointless self-swaps before the first zero) |
-| Non-zero order preserved? | ✅ | ✅ |
+| Remove every `x` | `arr[read] != x` | — |
+| Remove duplicates (**sorted**) | `arr[read] != arr[read − 1]` | start both at `1` |
+| Keep at most `k` copies (**sorted**) | its run length so far `≤ k` | count the run |
+| Move zeros to the end | `arr[read] != 0` | then fill `write … n−1` with `0` |
 
-Both `O(n)` time, `O(1)` space.
+> 💡 **Why "sorted" matters for duplicates:** sorting makes equal values **adjacent**, so
+> "have I seen this before?" becomes "is it equal to my left neighbour?" — an `O(1)` check
+> instead of a hash lookup. More on adjacency in [Runs & Boundaries](008-runs-and-boundaries.md).
 
-### ⚠️ Pitfalls
+### Compare with the naive way
 
-- Forgetting phase 2 — the tail still holds old non-zero values.
-- "Swap every zero with the last element" moves zeros to the end but **scrambles** the order.
+```text
+delete-and-shift each unwanted element     O(n) per delete  →  O(n²)
+copy keepers into a new array              O(n) time, O(n) space
+read / write                               O(n) time, O(1) space   ✅
+```
+
+### Stable vs unstable
+
+Copying forward keeps the kept elements in their original order (**stable**). If order
+doesn't matter, there are faster tricks — e.g. "overwrite the unwanted element with the
+**last** element and shrink" — but they scramble the order. Always ask whether order
+matters.
+
+### Partitioning — the same shape with swaps
+
+Swap instead of copy, and you split the array into "keepers | the rest" in one pass:
+
+```cpp
+int write = 0;
+for (int read = 0; read < n; read++)
+    if (arr[read] < pivot)
+        swap(arr[write++], arr[read]);     // small values gather at the front
+```
+
+This is the heart of Quick Sort's partition. With **three** pointers (`low`, `mid`, `high`)
+you can split into three groups in one pass — the **Dutch National Flag** algorithm
+(sort an array of `0`s, `1`s and `2`s).
 
 ---
 
-## 4. All Four Read/Write Problems Side by Side
+## 6. Shape 3 — One Pointer per Array
 
-| Problem | `write` starts | `read` starts | Keep `arr[read]` when… | Needs sorted? | Extra step |
-|---|---|---|---|---|---|
-| Remove `value` | 0 | 0 | `arr[read] != value` | no | — |
-| Remove duplicates | 1 | 1 | `arr[read] != arr[read − 1]` | **yes** | guard `size <= 1` |
-| At most `k` | 1 | 1 | run length `<= k` | **yes** | track the run |
-| Move zeros | 0 | 0 | `arr[read] != 0` | no | fill tail with `0` |
+Merging two sorted arrays: look at the front of each, take the smaller, advance that pointer.
 
-> **That's the pattern to recognise.** The loop never changes; only *where you start* and
-> *what you keep* do. The same template also drives partitioning (Quick Sort, Dutch National
-> Flag) later.
+```cpp
+int i = 0, j = 0;
+while (i < n && j < m)
+    out.push_back(a[i] <= b[j] ? a[i++] : b[j++]);
+while (i < n) out.push_back(a[i++]);       // one side may have leftovers
+while (j < m) out.push_back(b[j++]);
+```
+
+```text
+a = [1 4 7]    b = [2 3 9]
+take 1 (a) · 2 (b) · 3 (b) · 4 (a) · 7 (a) · 9 (b)   →  [1 2 3 4 7 9]
+```
+
+`O(n + m)`. Same elimination idea: the smaller front element can't be beaten by anything
+later in either array, so it's safe to output it now. This is the "merge" in Merge Sort.
 
 ---
 
-## 5. Common Mistakes
+## 7. Why It's `O(n)` — Counting Moves, Not Loops
 
-| ✗ Mistake | Result |
+```text
+opposite ends     the gap r − l shrinks by ≥ 1 every step         →  ≤ n steps
+read / write      read moves n times; write moves ≤ n times        →  ≤ 2n
+two arrays        every step advances i or j                       →  ≤ n + m
+```
+
+> 🔑 Judge two-pointer code by **how far each pointer can travel in total**, not by how
+> many loops you see. A `while` inside a `for` is still `O(n)` if the inner pointer never
+> moves backward — that's exactly the [Sliding Window](012-sliding-window.md) argument.
+
+---
+
+## 8. Recognising Two-Pointer Problems
+
+```text
+"sorted array" + "pair / triplet with sum …"          → opposite ends
+"palindrome", "reverse"                               → opposite ends
+"in place", "O(1) extra space", "remove", "compact"   → read / write
+"move all X to the end/front", "partition"            → read / write (swap)
+"two sorted arrays", "merge", "intersection"          → one pointer per array
+"contiguous subarray with sum/length …"               → sliding window (a cousin)
+```
+
+### Where it doesn't apply
+
+- **No order to exploit.** Pair sum on an unsorted array → hashing.
+- **Answers that need to look back.** If discarding an element might be wrong later, you
+  can't move the pointer — that's a sign of DP or a different structure.
+
+---
+
+## 9. Common Mistakes
+
+| ✗ Mistake | Why it's wrong |
 |---|---|
-| Returning nothing / ignoring the new size | Caller prints junk past the logical end |
-| Dedupe on an **unsorted** array | Non-adjacent duplicates survive |
-| Repeated delete-and-shift to remove values | `O(n²)` instead of `O(n)` |
-| `left <= right` in reverse | Harmless self-swap, but signals shaky reasoning |
-| Reversing with a full `0 … n` loop | Reverses twice — no change |
-| Forgetting phase 2 in move zeros | Old values remain at the tail |
-| Swap-with-last for move zeros | Correct zeros, broken order |
+| `l <= r` in reverse / pair sum | Pairs an element with itself |
+| Opposite-ends pair sum on unsorted data | The elimination argument needs order |
+| Returning nothing from an in-place remove | The caller can't tell where valid data ends |
+| Dedupe by neighbours on an unsorted array | Non-adjacent duplicates survive |
+| Forgetting leftovers when merging | One array's tail never gets copied |
+| Calling nested pointer loops `O(n²)` | Count total pointer movement instead |
 
 ---
 
-## 6. Quick Recall — Interview One-Liners
+## 10. Practice in This Repo
+
+| Problem | Shape | 📄 |
+|---|---|---|
+| Reverse (whole array or a sub-range) | opposite ends | [`basic_operations.h`](../../programs/cpp/include/arrays/basic_operations.h) |
+| Remove a value · remove duplicates · keep at most `k` | read / write | [`remove_elements.cpp`](../../programs/cpp/data_structures/arrays/basic/remove_elements.cpp) |
+| Move zeros to the end | read / write + fill | [`move_zeros.cpp`](../../programs/cpp/data_structures/arrays/basic/move_zeros.cpp) |
+| Pair with a given sum (sorted) | opposite ends | [`TwoPointerApproachToFindGivenPairSum.java`](../../programs/java/arrays/searching/TwoPointerApproachToFindGivenPairSum.java) |
+| Trapping rain water in `O(1)` space | opposite ends | [note 007 §6](007-prefix-suffix-extremes.md) |
+
+---
+
+## 11. Quick Recall — Interview One-Liners
 
 | Question | Answer |
 |---|---|
-| **Two kinds of two pointers?** | Opposite ends (converge) and read/write (same direction). |
-| **Why is read/write safe in place?** | `write <= read` — you only overwrite what you've already read. |
-| **The invariant?** | `arr[0 … write)` is the answer for everything read so far. |
-| **What does a remove function return?** | The new logical size (= `write`). |
-| **Why not delete each unwanted element?** | Each delete shifts → `O(n²)`; read/write is `O(n)`. |
-| **Remove duplicates — keep condition?** | `arr[read] != arr[read − 1]`; requires a sorted array. |
-| **Unsorted duplicates?** | Hash set, `O(n)` time and space. |
-| **At most `k` copies?** | Count the current run; keep while `run <= k`. |
-| **Move zeros?** | Compact non-zeros to the front, then fill the rest with `0`. Order preserved. |
-| **Reverse — how many swaps?** | `⌊n/2⌋`; stop when `left >= right`. |
-| **Complexity of everything here?** | `O(n)` time, `O(1)` extra space. |
+| **What makes two pointers work?** | Every move discards an element you can prove is no longer needed. |
+| **Three shapes?** | Opposite ends · read/write (same direction) · one pointer per array. |
+| **Pair sum in a sorted array — the rule?** | Sum too small → `l++`; too big → `r−−`. |
+| **Why can't it miss a pair?** | Invariant: any valid pair is still inside `[l, r]`. |
+| **Unsorted pair sum?** | Hash set, `O(n)` time and space. |
+| **Read/write invariant?** | `write ≤ read`; `arr[0…write)` is the answer so far. |
+| **Why is overwriting safe?** | You only write into slots you've already read. |
+| **Why sort before deduping?** | Equal values become adjacent — compare with the left neighbour. |
+| **Partition / Dutch flag?** | Read/write with swaps; three pointers for three groups. |
+| **How to judge the complexity?** | Total distance each pointer travels — never backward → `O(n)`. |
 
 ---
 
-## 7. The Mental Model
+## 12. The Mental Model
 
 ```text
-                    Two pointers
-                         │
-          ┌──────────────┴───────────────┐
-          ↓                              ↓
-    OPPOSITE ENDS                  READ / WRITE
-    swap & converge          read everything, write keepers
-    stop when l >= r          write <= read  →  safe in place
-          │                              │
-   reverse [start, size)     remove value · dedupe (sorted) ·
-   palindrome · pair sum      at most k (sorted) · move zeros
-          │                              │
-          └──── O(n) time · O(1) space ──┘
+                   "every pair" or "rebuild the array"
+                                 │
+              can I PROVE an element is no longer needed?
+                                 │ yes
+      ┌──────────────────────────┼───────────────────────────┐
+      ↓                          ↓                           ↓
+ OPPOSITE ENDS              READ / WRITE                TWO ARRAYS
+ drop the side that       keep → copy forward        output the smaller
+ can't work any more      write ≤ read = safe        front, advance it
+      │                          │                           │
+ reverse · palindrome     remove · dedupe ·            merge · intersect
+ pair sum (sorted)        move zeros · partition
+      │                          │                           │
+      └────────── pointers never move back → O(n) ──────────┘
 ```

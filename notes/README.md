@@ -92,19 +92,18 @@ notes/
 | 001 | Introduction to Arrays: Characteristics & O(1) Random Access | [001-introduction-to-arrays.md](006-arrays/001-introduction-to-arrays.md) |
 | 002 | Basic Array Operations & Their Complexities | [002-array-operations.md](006-arrays/002-array-operations.md) |
 | 003 | Static vs Dynamic Arrays (+ Advantages & Disadvantages) | [003-static-vs-dynamic-arrays.md](006-arrays/003-static-vs-dynamic-arrays.md) |
-| 004 | Single-Pass Scans: Largest, Second Largest, Is Sorted | [004-single-pass-scans.md](006-arrays/004-single-pass-scans.md) |
-| 005 | Two Pointers: Reverse, Remove Duplicates, Move Zeros | [005-two-pointers.md](006-arrays/005-two-pointers.md) |
-| 006 | Array Rotation: By One, By K & the Reversal Trick | [006-array-rotation.md](006-arrays/006-array-rotation.md) |
-| 007 | Running Extremes: Leaders & Maximum Difference | [007-running-extremes.md](006-arrays/007-running-extremes.md) |
-| 008 | Counting Runs: Frequencies, Max Consecutive Ones & Even-Odd Subarray | [008-counting-runs.md](006-arrays/008-counting-runs.md) |
-| 009 | Greedy Algorithms & Stock Buy and Sell | [009-greedy-and-stock-buy-sell.md](006-arrays/009-greedy-and-stock-buy-sell.md) |
-| 010 | Trapping Rain Water | [010-trapping-rain-water.md](006-arrays/010-trapping-rain-water.md) |
-| 011 | Kadane's Algorithm: Maximum Subarray Sum (+ Circular) | [011-kadanes-algorithm.md](006-arrays/011-kadanes-algorithm.md) |
-| 012 | Majority Element: Boyer–Moore Majority Vote | [012-majority-element.md](006-arrays/012-majority-element.md) |
-| 013 | Minimum Consecutive Flips (Minimum Group Flips) | [013-minimum-group-flips.md](006-arrays/013-minimum-group-flips.md) |
-| 014 | Sliding Window: Max Sum of K Elements & Subarray with Given Sum | [014-sliding-window.md](006-arrays/014-sliding-window.md) |
-| 015 | Prefix Sum: Range Sum Queries & Equilibrium Point | [015-prefix-sum.md](006-arrays/015-prefix-sum.md) |
-| 016 | Difference Array: Maximum Appearing Element in Ranges | [016-difference-array.md](006-arrays/016-difference-array.md) |
+| 004 | One-Pass Thinking: Carrying State | [004-one-pass-thinking.md](006-arrays/004-one-pass-thinking.md) |
+| 005 | Two Pointers | [005-two-pointers.md](006-arrays/005-two-pointers.md) |
+| 006 | Circular Thinking: Rotation, Modular Indexing & the Reversal Trick | [006-circular-thinking-and-rotation.md](006-arrays/006-circular-thinking-and-rotation.md) |
+| 007 | Prefix & Suffix Extremes ("Everything to My Left / Right") | [007-prefix-suffix-extremes.md](006-arrays/007-prefix-suffix-extremes.md) |
+| 008 | Runs & Boundaries: Thinking in Groups | [008-runs-and-boundaries.md](006-arrays/008-runs-and-boundaries.md) |
+| 009 | Greedy Algorithms | [009-greedy-algorithms.md](006-arrays/009-greedy-algorithms.md) |
+| 010 | Kadane's Algorithm: Thinking in "Best Ending Here" | [010-kadanes-algorithm.md](006-arrays/010-kadanes-algorithm.md) |
+| 011 | Boyer–Moore Majority Vote: Winning by Cancellation | [011-boyer-moore-voting.md](006-arrays/011-boyer-moore-voting.md) |
+| 012 | Sliding Window | [012-sliding-window.md](006-arrays/012-sliding-window.md) |
+| 013 | Prefix Sums | [013-prefix-sums.md](006-arrays/013-prefix-sums.md) |
+| 014 | Difference Arrays: Range Updates in O(1) | [014-difference-arrays.md](006-arrays/014-difference-arrays.md) |
+| 015 | Choosing the Right Array Technique (Decision Guide) | [015-choosing-the-right-technique.md](006-arrays/015-choosing-the-right-technique.md) |
 
 ---
 
@@ -119,6 +118,8 @@ Notes come in two shapes, so revision is predictable.
 > One-line takeaway
 
 1..n  Concept sections (definition → why → diagram → example)
+      🧠 Pause and predict — collapsible self-test questions (where useful)
+      Practice in This Repo — which programs exercise the concept
       Quick Recall — interview one-liners table
       Mental model / summary diagram
 ```

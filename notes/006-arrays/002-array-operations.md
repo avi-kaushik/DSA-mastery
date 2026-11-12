@@ -2,11 +2,6 @@
 
 > **One-line takeaway:** **Reading** an array is cheap; **changing its shape** is expensive. Any insert or delete that isn't at the end has to **shift** every element after it to keep the array contiguous — and that shift is where `O(n)` comes from.
 
-📄 [`basic_operations.cpp`](../../programs/cpp/data_structures/arrays/basic/basic_operations.cpp) ·
-📄 [`InsertElement.java`](../../programs/java/arrays/basic/InsertElement.java) ·
-📄 [`DeleteElement.java`](../../programs/java/arrays/basic/DeleteElement.java) ·
-📄 [`SearchInteger.java`](../../programs/java/arrays/basic/SearchInteger.java)
-
 ---
 
 ## 1. The Model: Capacity vs Size
@@ -23,18 +18,18 @@ size     = 4      (slots in use — changes on insert / delete)
   0 … size−1
 ```
 
-`basic_operations.cpp` follows exactly this model:
+Think of a parking lot with 9 bays where cars always park from the left with no gaps.
+`capacity` is the number of bays; `size` is the number of cars. Bays past `size` may still
+have old paint marks on the ground — they're not cars.
 
 ```cpp
-constexpr int array_capacity = 9;
-int arr[array_capacity] = {};
-int size = 0;
+int arr[9] = {};       // capacity 9
+int size = 0;          // nothing stored yet
 
-size = insert(arr, 4, 0, size, array_capacity);   // functions RETURN the new size
-size = remove(arr, 12, size, array_capacity);
+size = insert(arr, value, position, size, 9);   // shape-changing operations RETURN the new size
 ```
 
-> 🔑 Every function that changes the shape **returns the new size**, and the caller must
+> 🔑 Every operation that changes the shape **returns the new size**, and the caller must
 > store it. Forget to, and the array and its size disagree — the source of most bugs here.
 
 This is also, in miniature, how `std::vector` and `ArrayList` work inside
@@ -209,12 +204,10 @@ element moves into the slot just vacated before it. Exactly the mirror of insert
 
 > ⚠️ **The loop bound is the classic bug.** The body reads `arr[i + 1]`, so the last valid
 > `i` is `size − 2` → condition `i < size − 1`. With `i < size`, the last iteration reads
-> `arr[size]` — one past the end. (This is the bug in
-> [`DeleteElement.java`](../../programs/java/arrays/basic/DeleteElement.java), which loops
-> to `arr.length`.)
+> `arr[size]` — one past the end.
 
 > 💡 You don't need to clear the old last slot. Once `size` shrinks, it's outside the valid
-> range. Java's `DeleteElement` sets it to `0` only because it has no separate `size`.
+> range — like an empty parking bay that still has old paint on it.
 
 ---
 
@@ -249,14 +242,14 @@ Write-heavy data → don't.
 
 ## 8. Edge Cases Interviewers Probe
 
-| Case | What should happen | How `basic_operations.cpp` handles it |
+| Case | What should happen | Why |
 |---|---|---|
-| Insert into a full array | Reject | `throw runtime_error("Array is full.")` |
-| Insert at `position > size` | Reject — it would leave a hole | `throw out_of_range(...)` |
-| Insert at `position == size` | Allowed — an append | Loop runs zero times |
-| Delete a value that's absent | Size unchanged | `return size` |
-| Delete from an empty array | Reject or no-op | `throw` when `size <= 0` |
-| Duplicate values | Only the **first** is removed | `while` stops at the first match |
+| Insert into a full array | Reject (or grow — see [note 003](003-static-vs-dynamic-arrays.md)) | There's no slot for the shifted last element |
+| Insert at `position > size` | Reject | It would leave a hole — arrays have no gaps |
+| Insert at `position == size` | Allowed — it's an append | The shift loop simply runs zero times |
+| Delete a value that's absent | Size unchanged | Nothing to close |
+| Delete from an empty array | Reject or no-op | There's nothing to remove |
+| Duplicate values | Usually only the **first** is removed | The search stops at the first match — say so |
 
 ---
 
@@ -289,7 +282,21 @@ Write-heavy data → don't.
 
 ---
 
-## 11. Quick Recall — Interview One-Liners
+## 11. Practice in This Repo
+
+| Operation | 📄 |
+|---|---|
+| Insert, delete, search, reverse with a capacity/size model | [`basic_operations.cpp`](../../programs/cpp/data_structures/arrays/basic/basic_operations.cpp) |
+| Insert by shifting (Java) | [`InsertElement.java`](../../programs/java/arrays/basic/InsertElement.java) |
+| Delete by shifting (Java) | [`DeleteElement.java`](../../programs/java/arrays/basic/DeleteElement.java) |
+| Linear search (Java) | [`SearchInteger.java`](../../programs/java/arrays/basic/SearchInteger.java) |
+
+> ⚠️ `DeleteElement.java`'s shift loop runs to `arr.length` while reading `arr[j + 1]` — the
+> exact off-by-one from §6.
+
+---
+
+## 12. Quick Recall — Interview One-Liners
 
 | Question | Answer |
 |---|---|
@@ -308,7 +315,7 @@ Write-heavy data → don't.
 
 ---
 
-## 12. The Mental Model
+## 13. The Mental Model
 
 ```text
                      Array operation
